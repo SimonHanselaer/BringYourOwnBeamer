@@ -13,6 +13,7 @@ export default class GameScene extends Phaser.Scene {
     this.screenHeight = this.sys.game.config.height;
     this.player;
     this.moveOreBoolean = true;
+    this.oreSpeed = 2;
   }
   preload() {}
 
@@ -55,12 +56,24 @@ export default class GameScene extends Phaser.Scene {
 
   clickedOre() {
     this.moveOreBoolean = false;
-    this.physics.world.gravity.y = this.physics.world.gravity.y + 160;
+    console.log(this.ore);
+    this.ore.body.gravity.y = this.ore.body.gravity.y + 160;
   }
 
   update() {
     if (this.moveOreBoolean) {
-      this.ore.x = this.ore.x + 2;
+      this.ore.x = this.ore.x + this.oreSpeed;
+    }
+
+    if (
+      this.ore.x > this.screenWidth + this.ore.width / 20 ||
+      this.ore.y > this.screenHeight + this.ore.height / 20
+    ) {
+      console.log(`${this.ore.width / 2}`);
+      this.ore.destroy();
+      this.createOre();
+      this.oreSpeed = this.oreSpeed + 0.1;
+      this.moveOreBoolean = true;
     }
   }
 }

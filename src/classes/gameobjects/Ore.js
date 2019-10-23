@@ -5,6 +5,6 @@ export default class Ore extends Phaser.Physics.Arcade.Image {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
-    this.setCollideWorldBounds(true);
+    this.setCollideWorldBounds(false);
   }
 }
