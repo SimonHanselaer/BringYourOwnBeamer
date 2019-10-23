@@ -14,13 +14,15 @@ export default class GameScene extends Phaser.Scene {
     this.screenHeight = this.sys.game.config.height;
     this.player;
     this.moveOreBoolean = true;
-    this.oreSpeed = 2;
+    this.oreSpeed = 5;
+
+    this.containers = [];
 
     this.containerCount = [
-      {id: 1, color: 'yellow', count: 0},
-      {id: 2, color: 'blue', count: 0},
-      {id: 3, color: 'red', count: 0},
-      {id: 4, color: 'green', count: 0}
+      {color: 'yellow', count: 0},
+      {color: 'blue', count: 0},
+      {color: 'red', count: 0},
+      {color: 'green', count: 0}
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
@@ -44,17 +46,17 @@ export default class GameScene extends Phaser.Scene {
       console.log('pointer moved');
     });
 
-    // const controllerOptions = {enableGestures: true};
-    // Leap.loop(controllerOptions, frame => {
-    //   if (frame.hands.length > 0) {
-    //     const hand = frame.hands[0];
-    //     console.log(hand.direction[0]);
-    //     player.setPosition(
-    //       hand.direction[0],
-    //       this.sys.game.config.height / 2 - 150
-    //     );
-    //   }
-    // });
+    const controllerOptions = {enableGestures: true};
+    Leap.loop(controllerOptions, frame => {
+      if (frame.hands.length > 0) {
+        const hand = frame.hands[0];
+        console.log(hand.direction[0]);
+        player.setPosition(
+          hand.direction[0],
+          this.sys.game.config.height / 2 - 150
+        );
+      }
+    });
   }
 
   createPlayer() {
@@ -69,18 +71,19 @@ export default class GameScene extends Phaser.Scene {
   createContainers() {
     this.containerPosX = 249;
     this.teller = 1;
-    this.colors.forEach((color, teller) => {
+    this.colors.forEach(color => {
       this.container = new Container(
         this,
         this.containerPosX,
         this.sys.game.config.height,
         color,
-        teller
+        this.teller
       );
       // console.log(`container ${color} aangemaakt`);
       // console.log(this.container.width);
       this.containerPosX = this.containerPosX + this.container.width + 100;
       this.teller ++;
+      this.containers.push(this.container);
     });
   }
 
@@ -103,13 +106,18 @@ export default class GameScene extends Phaser.Scene {
       null,
       this
     );
-    this.physics.add.overlap(
-      this.ore,
-      this.container,
-      this.createOverlapContainer,
-      null,
-      this
-    );
+
+    this.containers.forEach(container => {
+      if (container.state === this.ore.state) {
+        this.physics.add.overlap(
+          container,
+          this.ore,
+          this.createOverlapContainer,
+          null,
+          this
+        );
+      }
+    });
 
     this.physics.add.overlap(
       this.ore,
@@ -130,8 +138,13 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createOverlapContainer() {
-    if (this.ore.state == this.container.state) {
-      console.log(this.containerCount[this.ore.state].count ++);
+    this.orestate = this.ore.state - 1;
+    if (this.ore.y > this.screenHeight) {
+      this.containerCount[this.orestate].count ++;
+
+      if (this.containerCount[this.orestate].count == 3) {
+        console.log(this.containerCount[this.orestate].color, 'vol!');
+      }
     }
   }
 
