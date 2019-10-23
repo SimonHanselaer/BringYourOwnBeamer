@@ -1,4 +1,4 @@
-export default class Player extends Phaser.Physics.Arcade.Image {
+export default class Ore extends Phaser.Physics.Arcade.Image {
   constructor(scene, x, y) {
     super(scene, x, y, `grondstof`);
 

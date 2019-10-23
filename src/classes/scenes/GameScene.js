@@ -1,4 +1,4 @@
-import Player from '../gameobjects/Player';
+import Ore from '../gameobjects/Ore';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -7,7 +7,7 @@ export default class GameScene extends Phaser.Scene {
     });
   }
   init() {
-    this.boatPosY = this.sys.game.config.height - 100;
+    this.orePosY = 0;
     this.screenWidth = this.sys.game.config.width;
     this.screenHeight = this.sys.game.config.height;
   }
@@ -15,23 +15,22 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.createControls();
-    this.createPlayer();
+    this.createOre();
   }
 
   createControls() {
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
-  createPlayer() {
-    this.player = new Player(
+  createOre() {
+    this.ore = new Ore(
       this,
-      this.sys.game.config.width / 2,
-      this.boatPosY
+      this.orePosY,
+      this.sys.game.config.height / 2 - 150
     );
-    this.player.setScale(.1, .1);
+    this.ore.setScale(.1, .1);
   }
 
   update() {
-
   }
 }
