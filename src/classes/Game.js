@@ -10,12 +10,12 @@ class Game extends Phaser.Game {
       height: window.innerHeight,
       title: `Big Bucks Buccaneers`,
       scene: [BootScene, PreloadScene, GameScene],
-      backgroundColor: '#67a0fc',
+      backgroundColor: '#ffffff',
       version: `1.0`,
       physics: {
         default: `arcade`,
         arcade: {
-          gravity: {y: 35},
+          gravity: { y: 35 },
           debug: false
         }
       }
