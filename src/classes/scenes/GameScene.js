@@ -35,6 +35,7 @@ export default class GameScene extends Phaser.Scene {
     this.createContainers();
     this.createOre();
     this.checkForProgress();
+    this.createProgressBar();
   }
 
   createControls(player) {
@@ -119,8 +120,6 @@ export default class GameScene extends Phaser.Scene {
           this
         );
       }
-
-
     });
 
 
@@ -151,6 +150,16 @@ export default class GameScene extends Phaser.Scene {
         console.log(this.containerCount[this.orestate].color, 'vol!');
       }
     }
+  }
+
+  createProgressBar() {
+    this.bar = this.add.rectangle(
+      this.screenWidth / 2,
+      0,
+      this.screenWidth,
+      20,
+      0xec98a2
+    );
   }
 
   update() {
