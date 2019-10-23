@@ -33,27 +33,28 @@ export default class GameScene extends Phaser.Scene {
     this.createContainers();
     this.createOre();
     this.checkForProgress();
+    this.createProgressBar();
   }
 
   createControls(player) {
-    // this.input.on('pointermove', pointer => {
-    //   // console.log(player);
-    //   // console.log(pointer);
-    //   player.setPosition(pointer.x, this.sys.game.config.height / 2 - 150);
-    //   console.log('pointer moved');
-    // });
-
-    const controllerOptions = {enableGestures: true};
-    Leap.loop(controllerOptions, frame => {
-      if (frame.hands.length > 0) {
-        const hand = frame.hands[0];
-        console.log(hand.direction[0]);
-        player.setPosition(
-          hand.direction[0],
-          this.sys.game.config.height / 2 - 150
-        );
-      }
+    this.input.on('pointermove', pointer => {
+      // console.log(player);
+      // console.log(pointer);
+      player.setPosition(pointer.x, this.sys.game.config.height / 2 - 150);
+      console.log('pointer moved');
     });
+
+    // const controllerOptions = {enableGestures: true};
+    // Leap.loop(controllerOptions, frame => {
+    //   if (frame.hands.length > 0) {
+    //     const hand = frame.hands[0];
+    //     console.log(hand.direction[0]);
+    //     player.setPosition(
+    //       hand.direction[0],
+    //       this.sys.game.config.height / 2 - 150
+    //     );
+    //   }
+    // });
   }
 
   createPlayer() {
@@ -132,6 +133,16 @@ export default class GameScene extends Phaser.Scene {
     if (this.ore.state == this.container.state) {
       console.log(this.containerCount[this.ore.state].count ++);
     }
+  }
+
+  createProgressBar() {
+    this.bar = this.add.rectangle(
+      this.screenWidth / 2,
+      0,
+      this.screenWidth,
+      20,
+      0xec98a2
+    );
   }
 
   update() {
