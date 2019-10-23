@@ -15,7 +15,7 @@ export default class GameScene extends Phaser.Scene {
     this.moveOreBoolean = true;
     this.oreSpeed = 2;
   }
-  preload() { }
+  preload() {}
 
   create() {
     this.createPlayer();
@@ -24,11 +24,23 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createControls(player) {
-    this.input.on('pointermove', pointer => {
-      // console.log(player);
-      // console.log(pointer);
-      player.setPosition(pointer.x, this.sys.game.config.height / 2 - 150);
-      console.log('pointer moved');
+    // this.input.on('pointermove', pointer => {
+    //   // console.log(player);
+    //   // console.log(pointer);
+    //   player.setPosition(pointer.x, this.sys.game.config.height / 2 - 150);
+    //   console.log('pointer moved');
+    // });
+
+    const controllerOptions = {enableGestures: true};
+    Leap.loop(controllerOptions, frame => {
+      if (frame.hands.length > 0) {
+        const hand = frame.hands[0];
+        console.log(hand.direction[0]);
+        player.setPosition(
+          hand.direction[0],
+          this.sys.game.config.height / 2 - 150
+        );
+      }
     });
   }
 
@@ -53,7 +65,13 @@ export default class GameScene extends Phaser.Scene {
     this.ore.setScale(0.1, 0.1);
     this.ore.setInteractive();
 
-    this.physics.add.overlap(this.ore, this.player, this.createOverlap, null, this);
+    this.physics.add.overlap(
+      this.ore,
+      this.player,
+      this.createOverlap,
+      null,
+      this
+    );
   }
 
   createOverlap() {

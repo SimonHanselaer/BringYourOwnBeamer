@@ -6,6 +6,7 @@ const webpack = require('webpack');
 
 module.exports = (env, {mode}) => {
   console.log(mode);
+  const isDevelopment = mode === 'development';
   return {
     output: {
       filename: '[name].[hash].js'
@@ -14,6 +15,7 @@ module.exports = (env, {mode}) => {
       overlay: true,
       hot: true
     },
+    devtool: isDevelopment ? '#eval-source-map' : 'source-map', // For production
     module: {
       rules: [
         {
