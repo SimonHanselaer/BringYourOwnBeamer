@@ -14,6 +14,8 @@ export default class GameScene extends Phaser.Scene {
     this.player;
     this.moveOreBoolean = true;
     this.oreSpeed = 2;
+    this.containerCount = [
+      { id: 1, color: 'yellow', count: 0 }, { id: 2, color: 'blue', count: 0 }, { id: 3, color: 'red', count: 0 }, { id: 4, color: 'green', count: 0 }]
   }
   preload() { }
 
@@ -21,6 +23,7 @@ export default class GameScene extends Phaser.Scene {
     this.createPlayer();
     this.createControls(this.player);
     this.createOre();
+    this.checkForProgress();
   }
 
   createControls(player) {
@@ -28,7 +31,6 @@ export default class GameScene extends Phaser.Scene {
       // console.log(player);
       // console.log(pointer);
       player.setPosition(pointer.x, this.sys.game.config.height / 2 - 150);
-      console.log('pointer moved');
     });
   }
 
@@ -53,14 +55,23 @@ export default class GameScene extends Phaser.Scene {
     this.ore.setScale(0.1, 0.1);
     this.ore.setInteractive();
 
-    this.physics.add.overlap(this.ore, this.player, this.createOverlap, null, this);
+    this.physics.add.overlap(this.ore, this.player, this.createOverlapOre, null, this);
+    this.physics.add.overlap(this.ore, this.container, this.createOverlapContainer, null, this);
   }
 
-  createOverlap() {
-    console.log('overlap detected');
+  createOverlapOre() {
     this.moveOreBoolean = false;
-    console.log(this.ore);
     this.ore.body.gravity.y = 1600;
+  }
+
+  checkForProgress() {
+    console.log(this.ore.state);
+  }
+
+  createOverlapContainer() {
+    if (this.ore.state == this.container.state) {
+      console.log(this.containerCount[this.ore.state].count++);
+    }
   }
 
   update() {
@@ -72,7 +83,6 @@ export default class GameScene extends Phaser.Scene {
       this.ore.x > this.screenWidth + this.ore.width / 20 ||
       this.ore.y > this.screenHeight + this.ore.height / 20
     ) {
-      console.log(`${this.ore.width / 2}`);
       this.ore.destroy();
       this.createOre();
       this.oreSpeed = this.oreSpeed + 0.1;
