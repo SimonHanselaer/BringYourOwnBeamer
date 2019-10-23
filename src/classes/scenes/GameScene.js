@@ -1,5 +1,6 @@
 import Ore from '../gameobjects/Ore';
 import Player from '../gameobjects/Player';
+import Container from '../gameobjects/Container';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -14,12 +15,15 @@ export default class GameScene extends Phaser.Scene {
     this.player;
     this.moveOreBoolean = true;
     this.oreSpeed = 2;
+
+    this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
   }
-  preload() { }
+  preload() {}
 
   create() {
     this.createPlayer();
     this.createControls(this.player);
+    this.createContainers();
     this.createOre();
   }
 
@@ -41,6 +45,24 @@ export default class GameScene extends Phaser.Scene {
     this.player.setScale(0.1, 0.1);
   }
 
+  createContainers() {
+    this.containerPosX = 249;
+    this.teller = 1;
+    this.colors.forEach((color, teller) => {
+      this.container = new Container(
+        this,
+        this.containerPosX,
+        this.sys.game.config.height,
+        color,
+        teller
+      );
+      // console.log(`container ${color} aangemaakt`);
+      // console.log(this.container.width);
+      this.containerPosX = this.containerPosX + this.container.width + 100;
+      this.teller ++;
+    });
+  }
+
   createOre() {
     this.random = Math.ceil(Math.random() * 4);
     this.ore = new Ore(
@@ -53,7 +75,13 @@ export default class GameScene extends Phaser.Scene {
     this.ore.setScale(0.1, 0.1);
     this.ore.setInteractive();
 
-    this.physics.add.overlap(this.ore, this.player, this.createOverlap, null, this);
+    this.physics.add.overlap(
+      this.ore,
+      this.player,
+      this.createOverlap,
+      null,
+      this
+    );
   }
 
   createOverlap() {
