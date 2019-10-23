@@ -1,4 +1,5 @@
 import Ore from '../gameobjects/Ore';
+import Player from '../gameobjects/Player';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -10,16 +11,23 @@ export default class GameScene extends Phaser.Scene {
     this.orePosY = 0;
     this.screenWidth = this.sys.game.config.width;
     this.screenHeight = this.sys.game.config.height;
+    this.player;
   }
-  preload() { }
+  preload() {}
 
   create() {
-    this.createControls();
+    this.createPlayer();
+    this.createControls(this.player);
     this.createOre();
   }
 
-  createControls() {
-    this.cursors = this.input.keyboard.createCursorKeys();
+  createControls(player) {
+    this.input.on('pointermove', pointer => {
+      // console.log(player);
+      // console.log(pointer);
+      player.setPosition(pointer.x, pointer.y);
+      console.log('pointer moved');
+    });
   }
 
   createOre() {
@@ -28,9 +36,17 @@ export default class GameScene extends Phaser.Scene {
       this.orePosY,
       this.sys.game.config.height / 2 - 150
     );
-    this.ore.setScale(.1, .1);
+    this.ore.setScale(0.1, 0.1);
   }
 
-  update() {
+  createPlayer() {
+    this.player = new Player(
+      this,
+      this.sys.game.config.width / 2,
+      this.sys.game.config.height / 2
+    );
+    this.player.setScale(0.1, 0.1);
   }
+
+  update() {}
 }
