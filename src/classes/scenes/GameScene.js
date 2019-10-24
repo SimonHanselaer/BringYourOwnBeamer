@@ -23,17 +23,19 @@ export default class GameScene extends Phaser.Scene {
 
     this.containers = [];
 
+    this.containerStaticGroup = this.physics.add.staticGroup();
+
     this.containerCount = [
-      { color: 'yellow', count: 0 },
-      { color: 'blue', count: 0 },
-      { color: 'red', count: 0 },
-      { color: 'green', count: 0 }
+      {color: 'yellow', count: 0},
+      {color: 'blue', count: 0},
+      {color: 'red', count: 0},
+      {color: 'green', count: 0}
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
   }
 
-  preload() { }
+  preload() {}
 
   create() {
     this.createPlayer();
@@ -53,18 +55,21 @@ export default class GameScene extends Phaser.Scene {
       console.log('pointer moved');
     });
 
-    const controllerOptions = { enableGestures: true };
+    const controllerOptions = {enableGestures: true};
     Leap.loop(controllerOptions, frame => {
       if (frame.hands.length > 0) {
         const hand = frame.hands[0];
         const position = hand.palmPosition[0];
 
-        console.log(position, map(position, - 150, 150, 0, 1));
+        let realPosition = map(position, - 200, 200, 0, this.screenWidth);
 
-        player.setPosition(
-          map(position, - 200, 200, 0, this.screenWidth),
-          this.sys.game.config.height / 2 - 150
-        );
+        if (realPosition < 0) {
+          realPosition = 0;
+        } else if (realPosition > this.screenWidth) {
+          realPosition = this.screenWidth;
+        }
+
+        player.setPosition(realPosition, this.sys.game.config.height / 2 - 150);
       }
     });
   }
@@ -84,20 +89,36 @@ export default class GameScene extends Phaser.Scene {
 
   createContainers() {
     this.containerPosX = 249;
-    this.teller = 1;
+    this.teller = 0;
     this.colors.forEach(color => {
-      this.container = new Container(
-        this,
-        this.containerPosX,
-        this.sys.game.config.height,
-        color,
-        this.teller
-      );
+      // this.container = new Container(
+      //   this,
+      //   this.containerPosX,
+      //   this.sys.game.config.height,
+      //   color,
+      //   this.teller
+
+      this.containerStaticGroup
+        .create(
+          this.containerPosX,
+          this.screenHeight - 182,
+          `container${color}`
+        )
+        .refreshBody();
+
+      this.containerStaticGroup.children.entries[this.teller].color = color;
+      console.log(this.containerStaticGroup.children.entries[this.teller]);
+
       // console.log(`container ${color} aangemaakt`);
       // console.log(this.container.width);
-      this.containerPosX = this.containerPosX + this.container.width + 100;
-      this.teller++;
-      this.containers.push(this.container);
+      // this.container.body.checkCollision.none = true;
+      // this.container.body.checkCollision.up = false;
+      // this.container.body.checkCollision.right = false;
+
+      // console.log(this.container.body);
+      this.containerPosX = this.containerPosX + 498 + 100;
+      this.teller ++;
+      // this.containers.push(this.container);
     });
   }
 
@@ -115,7 +136,7 @@ export default class GameScene extends Phaser.Scene {
     this.ore.setScale(0.1, 0.1);
     this.ore.setInteractive();
 
-    this.physics.add.overlap(
+    this.physics.add.collider(
       this.ore,
       this.player,
       this.createOverlapOre,
@@ -123,17 +144,27 @@ export default class GameScene extends Phaser.Scene {
       this
     );
 
-    this.containers.forEach(container => {
-      if (container.state === this.ore.state) {
-        this.physics.add.overlap(
-          container,
-          this.ore,
-          this.createOverlapContainer,
-          null,
-          this
-        );
+    console.log('ore', this.ore);
+    console.log(this.physics);
+
+    this.containerStaticGroup.children.entries.forEach(container => {
+      if (container.color === this.ore.color) {
+        this.physics.add.collider(this.ore, container, this.handleCollideA);
+        console.log('collider toegevoegd tussen ore en container');
       }
     });
+
+    // this.containers.forEach(container => {
+    //   if (container.state === this.ore.state) {
+    //     this.physics.add.collider(
+    //       container,
+    //       this.ore,
+    //       this.createOverlapContainer,
+    //       null,
+    //       this
+    //     );
+    //   }
+    // });
 
     this.physics.add.overlap(
       this.ore,
@@ -144,23 +175,37 @@ export default class GameScene extends Phaser.Scene {
     );
   }
 
+  handleCollideA(e) {
+    if (!e.down) {
+      e.down = true;
+      //
+      console.log('een keer maar');
+    }
+  }
+  handleCollideB(e) {
+    console.log(e);
+  }
+  handleCollideC() {
+    //console.log('handleCollideC');
+  }
+
   createOverlapOre() {
     this.moveOreBoolean = false;
     this.ore.body.gravity.y = 1600;
   }
 
-  //progressBar --------------------------------------------------------------------------------------
-
   createOverlapContainer() {
     this.orestate = this.ore.state - 1;
     if (this.ore.y > this.screenHeight) {
-      this.containerCount[this.orestate].count++;
+      this.containerCount[this.orestate].count ++;
 
       if (this.containerCount[this.orestate].count == 3) {
         console.log(this.containerCount[this.orestate].color, 'vol!');
       }
     }
   }
+
+  //progressBar --------------------------------------------------------------------------------------
 
   createProgressBar() {
     this.bar = this.add.rectangle(
@@ -188,5 +233,8 @@ export default class GameScene extends Phaser.Scene {
       this.oreSpeed = this.oreSpeed + 0.1;
       this.moveOreBoolean = true;
     }
+    // if (this.ore.body.onFloor()) {
+    //   console.log('er is een collide');
+    // }
   }
 }
