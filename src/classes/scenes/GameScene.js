@@ -14,6 +14,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   init() {
+    this.progress = 0;
     this.orePosY = 0;
     this.screenWidth = this.sys.game.config.width;
     this.screenHeight = this.sys.game.config.height;
@@ -148,34 +149,18 @@ export default class GameScene extends Phaser.Scene {
     console.log(this.physics);
 
     this.containerStaticGroup.children.entries.forEach(container => {
-      if (container.color === this.ore.color) {
-        this.physics.add.collider(this.ore, container, this.handleCollideA);
-        if (this.ore.down) {
-          this.createOre();
+      this.containerCount.forEach(counts => {
+        console.log('Count: ', counts.color, counts.count);
+        if (container.color === this.ore.color && counts.color === this.ore.color && counts.count < 3) {
+          this.physics.add.collider(this.ore, container, this.handleCollideA);
+          if (this.ore.down) {
+            this.createOre();
+          }
+          console.log('collider toegevoegd tussen ore en container');
         }
-        console.log('collider toegevoegd tussen ore en container');
-      }
+      });
+
     });
-
-    // this.containers.forEach(container => {
-    //   if (container.state === this.ore.state) {
-    //     this.physics.add.collider(
-    //       container,
-    //       this.ore,
-    //       this.createOverlapContainer,
-    //       null,
-    //       this
-    //     );
-    //   }
-    // });
-
-    this.physics.add.overlap(
-      this.ore,
-      this.player,
-      this.createOverlap,
-      null,
-      this
-    );
   }
 
   handleCollideA(e) {
@@ -184,7 +169,6 @@ export default class GameScene extends Phaser.Scene {
       //
       console.log('een keer maar');
       return e.down;
-      // this.createOre();
 
     }
   }
@@ -194,27 +178,17 @@ export default class GameScene extends Phaser.Scene {
     this.ore.body.gravity.y = 1600;
   }
 
-  createOverlapContainer() {
-    this.orestate = this.ore.state - 1;
-    if (this.ore.y > this.screenHeight) {
-      this.containerCount[this.orestate].count++;
-
-      if (this.containerCount[this.orestate].count == 3) {
-        console.log(this.containerCount[this.orestate].color, 'vol!');
-      }
-    }
-  }
-
   //progressBar --------------------------------------------------------------------------------------
 
   createProgressBar() {
     this.bar = this.add.rectangle(
-      this.screenWidth / 2,
       0,
-      this.screenWidth,
-      20,
+      0,
+      this.progress * 320,
+      50,
       0xec98a2
     );
+    this.bar.setOrigin(0)
   }
 
   //update --------------------------------------------------------------------------------------
@@ -237,6 +211,8 @@ export default class GameScene extends Phaser.Scene {
       this.containerCount.forEach(container => {
         if (this.ore.color === container.color) {
           container.count++;
+          this.progress++;
+          this.createProgressBar();
         }
         if (container.count === 3) {
           console.log('Container is vol');
