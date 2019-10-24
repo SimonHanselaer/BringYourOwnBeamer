@@ -238,6 +238,9 @@ export default class GameScene extends Phaser.Scene {
         if (this.ore.color === container.color) {
           container.count++;
         }
+        if (container.count === 3) {
+          console.log('Container is vol');
+        }
       });
       this.createOre();
       !this.ore.down;
