@@ -26,10 +26,10 @@ export default class GameScene extends Phaser.Scene {
     this.containerStaticGroup = this.physics.add.staticGroup();
 
     this.containerCount = [
-      { color: 'yellow', count: 0 },
-      { color: 'blue', count: 0 },
-      { color: 'red', count: 0 },
-      { color: 'green', count: 0 }
+      { color: 'Yellow', count: 0 },
+      { color: 'Blue', count: 0 },
+      { color: 'Red', count: 0 },
+      { color: 'Green', count: 0 }
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
@@ -234,13 +234,17 @@ export default class GameScene extends Phaser.Scene {
       this.moveOreBoolean = true;
     }
     if (this.ore.down) {
+      this.containerCount.forEach(container => {
+        if (this.ore.color === container.color) {
+          container.count++;
+        }
+      });
       this.createOre();
       !this.ore.down;
-      // this.containerCount.forEach(container => {
-      //   if (this.ore.color === container.color) {
-      //     container.count++;
-      //   }
-      // });
+
+      console.log(this.containerCount);
+
+
       this.oreSpeed = this.oreSpeed + 0.1;
       this.moveOreBoolean = true;
     }
