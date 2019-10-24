@@ -32,6 +32,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
   }
+
   preload() { }
 
   create() {
@@ -42,6 +43,8 @@ export default class GameScene extends Phaser.Scene {
     this.checkForProgress();
     this.createProgressBar();
   }
+
+  //Controls --------------------------------------------------------------------------------------
 
   createControls(player) {
     this.input.on('pointermove', pointer => {
@@ -67,6 +70,8 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
+  //player --------------------------------------------------------------------------------------
+
   createPlayer() {
     this.player = new Player(
       this,
@@ -75,6 +80,8 @@ export default class GameScene extends Phaser.Scene {
     );
     this.player.setScale(0.1, 0.1);
   }
+
+  //Container --------------------------------------------------------------------------------------
 
   createContainers() {
     this.containerPosX = 249;
@@ -94,6 +101,8 @@ export default class GameScene extends Phaser.Scene {
       this.containers.push(this.container);
     });
   }
+
+  //Ores --------------------------------------------------------------------------------------
 
   createOre() {
     this.random = Math.ceil(Math.random() * 4);
@@ -141,9 +150,7 @@ export default class GameScene extends Phaser.Scene {
     this.ore.body.gravity.y = 1600;
   }
 
-  checkForProgress() {
-    console.log(this.ore.state);
-  }
+  //progressBar --------------------------------------------------------------------------------------
 
   createOverlapContainer() {
     this.orestate = this.ore.state - 1;
@@ -165,6 +172,8 @@ export default class GameScene extends Phaser.Scene {
       0xec98a2
     );
   }
+
+  //update --------------------------------------------------------------------------------------
 
   update() {
     if (this.moveOreBoolean) {

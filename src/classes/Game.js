@@ -7,8 +7,8 @@ class Game extends Phaser.Game {
   constructor() {
     super({
       type: Phaser.AUTO,
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: 3840,
+      height: 1080,
       title: `Big Bucks Buccaneers`,
       scene: [BootScene, PreloadScene, GameScene],
       backgroundColor: '#ffffff',
@@ -16,7 +16,7 @@ class Game extends Phaser.Game {
       physics: {
         default: `arcade`,
         arcade: {
-          gravity: {y: 0},
+          gravity: { y: 0 },
           debug: true
         }
       }
