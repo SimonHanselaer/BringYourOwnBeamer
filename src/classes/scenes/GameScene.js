@@ -61,12 +61,15 @@ export default class GameScene extends Phaser.Scene {
         const hand = frame.hands[0];
         const position = hand.palmPosition[0];
 
-        console.log(position, map(position, - 150, 150, 0, 1));
+        let realPosition = map(position, - 200, 200, 0, this.screenWidth);
 
-        player.setPosition(
-          map(position, - 200, 200, 0, this.screenWidth),
-          this.sys.game.config.height / 2 - 150
-        );
+        if (realPosition < 0) {
+          realPosition = 0;
+        } else if (realPosition > this.screenWidth) {
+          realPosition = this.screenWidth;
+        }
+
+        player.setPosition(realPosition, this.sys.game.config.height / 2 - 150);
       }
     });
   }
