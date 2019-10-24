@@ -2,12 +2,17 @@ import Ore from '../gameobjects/Ore';
 import Player from '../gameobjects/Player';
 import Container from '../gameobjects/Container';
 
+const map = (value, in_min, in_max, out_min, out_max) => {
+  return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
+};
+
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super({
       key: `game`
     });
   }
+
   init() {
     this.orePosY = 0;
     this.screenWidth = this.sys.game.config.width;
@@ -19,15 +24,15 @@ export default class GameScene extends Phaser.Scene {
     this.containers = [];
 
     this.containerCount = [
-      {color: 'yellow', count: 0},
-      {color: 'blue', count: 0},
-      {color: 'red', count: 0},
-      {color: 'green', count: 0}
+      { color: 'yellow', count: 0 },
+      { color: 'blue', count: 0 },
+      { color: 'red', count: 0 },
+      { color: 'green', count: 0 }
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
   }
-  preload() {}
+  preload() { }
 
   create() {
     this.createPlayer();
@@ -46,13 +51,16 @@ export default class GameScene extends Phaser.Scene {
       console.log('pointer moved');
     });
 
-    const controllerOptions = {enableGestures: true};
+    const controllerOptions = { enableGestures: true };
     Leap.loop(controllerOptions, frame => {
       if (frame.hands.length > 0) {
         const hand = frame.hands[0];
-        console.log(hand.direction[0]);
+        const position = hand.palmPosition[0];
+
+        console.log(position, map(position, - 150, 150, 0, 1));
+
         player.setPosition(
-          hand.direction[0],
+          map(position, - 200, 200, 0, this.screenWidth),
           this.sys.game.config.height / 2 - 150
         );
       }
@@ -82,7 +90,7 @@ export default class GameScene extends Phaser.Scene {
       // console.log(`container ${color} aangemaakt`);
       // console.log(this.container.width);
       this.containerPosX = this.containerPosX + this.container.width + 100;
-      this.teller ++;
+      this.teller++;
       this.containers.push(this.container);
     });
   }
@@ -140,7 +148,7 @@ export default class GameScene extends Phaser.Scene {
   createOverlapContainer() {
     this.orestate = this.ore.state - 1;
     if (this.ore.y > this.screenHeight) {
-      this.containerCount[this.orestate].count ++;
+      this.containerCount[this.orestate].count++;
 
       if (this.containerCount[this.orestate].count == 3) {
         console.log(this.containerCount[this.orestate].color, 'vol!');
