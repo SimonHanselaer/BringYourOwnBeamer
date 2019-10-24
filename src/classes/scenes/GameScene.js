@@ -26,16 +26,16 @@ export default class GameScene extends Phaser.Scene {
     this.containerStaticGroup = this.physics.add.staticGroup();
 
     this.containerCount = [
-      {color: 'yellow', count: 0},
-      {color: 'blue', count: 0},
-      {color: 'red', count: 0},
-      {color: 'green', count: 0}
+      { color: 'yellow', count: 0 },
+      { color: 'blue', count: 0 },
+      { color: 'red', count: 0 },
+      { color: 'green', count: 0 }
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
   }
 
-  preload() {}
+  preload() { }
 
   create() {
     this.createPlayer();
@@ -55,7 +55,7 @@ export default class GameScene extends Phaser.Scene {
       console.log('pointer moved');
     });
 
-    const controllerOptions = {enableGestures: true};
+    const controllerOptions = { enableGestures: true };
     Leap.loop(controllerOptions, frame => {
       if (frame.hands.length > 0) {
         const hand = frame.hands[0];
@@ -117,7 +117,7 @@ export default class GameScene extends Phaser.Scene {
 
       // console.log(this.container.body);
       this.containerPosX = this.containerPosX + 498 + 100;
-      this.teller ++;
+      this.teller++;
       // this.containers.push(this.container);
     });
   }
@@ -150,6 +150,9 @@ export default class GameScene extends Phaser.Scene {
     this.containerStaticGroup.children.entries.forEach(container => {
       if (container.color === this.ore.color) {
         this.physics.add.collider(this.ore, container, this.handleCollideA);
+        if (this.ore.down) {
+          this.createOre();
+        }
         console.log('collider toegevoegd tussen ore en container');
       }
     });
@@ -180,13 +183,10 @@ export default class GameScene extends Phaser.Scene {
       e.down = true;
       //
       console.log('een keer maar');
+      return e.down;
+      // this.createOre();
+
     }
-  }
-  handleCollideB(e) {
-    console.log(e);
-  }
-  handleCollideC() {
-    //console.log('handleCollideC');
   }
 
   createOverlapOre() {
@@ -197,7 +197,7 @@ export default class GameScene extends Phaser.Scene {
   createOverlapContainer() {
     this.orestate = this.ore.state - 1;
     if (this.ore.y > this.screenHeight) {
-      this.containerCount[this.orestate].count ++;
+      this.containerCount[this.orestate].count++;
 
       if (this.containerCount[this.orestate].count == 3) {
         console.log(this.containerCount[this.orestate].color, 'vol!');
@@ -230,6 +230,17 @@ export default class GameScene extends Phaser.Scene {
     ) {
       this.ore.destroy();
       this.createOre();
+      this.oreSpeed = this.oreSpeed + 0.1;
+      this.moveOreBoolean = true;
+    }
+    if (this.ore.down) {
+      this.createOre();
+      !this.ore.down;
+      // this.containerCount.forEach(container => {
+      //   if (this.ore.color === container.color) {
+      //     container.count++;
+      //   }
+      // });
       this.oreSpeed = this.oreSpeed + 0.1;
       this.moveOreBoolean = true;
     }
