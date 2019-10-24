@@ -40,7 +40,6 @@ export default class GameScene extends Phaser.Scene {
     this.createControls(this.player);
     this.createContainers();
     this.createOre();
-    this.checkForProgress();
     this.createProgressBar();
   }
 
