@@ -2,6 +2,8 @@ import Ore from '../gameobjects/Ore';
 import Player from '../gameobjects/Player';
 import Container from '../gameobjects/Container';
 
+import { GrowTransition } from 'phaser3-transitions';
+
 const map = (value, in_min, in_max, out_min, out_max) => {
   return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
 };
@@ -53,7 +55,7 @@ export default class GameScene extends Phaser.Scene {
       // console.log(player);
       // console.log(pointer);
       player.setPosition(pointer.x, this.sys.game.config.height / 2 - 150);
-      console.log('pointer moved');
+      //console.log('pointer moved');
     });
 
     const controllerOptions = { enableGestures: true };
@@ -108,7 +110,7 @@ export default class GameScene extends Phaser.Scene {
         .refreshBody();
 
       this.containerStaticGroup.children.entries[this.teller].color = color;
-      console.log(this.containerStaticGroup.children.entries[this.teller]);
+      //console.log(this.containerStaticGroup.children.entries[this.teller]);
 
       // console.log(`container ${color} aangemaakt`);
       // console.log(this.container.width);
@@ -145,12 +147,12 @@ export default class GameScene extends Phaser.Scene {
       this
     );
 
-    console.log('ore', this.ore);
-    console.log(this.physics);
+    //console.log('ore', this.ore);
+    //console.log(this.physics);
 
     this.containerStaticGroup.children.entries.forEach(container => {
       this.containerCount.forEach(counts => {
-        console.log('Count: ', counts.color, counts.count);
+        //console.log('Count: ', counts.color, counts.count);
         if (container.color === this.ore.color && counts.color === this.ore.color && counts.count < 3) {
           this.physics.add.collider(this.ore, container, this.handleCollideA);
           if (this.ore.down) {
@@ -188,9 +190,47 @@ export default class GameScene extends Phaser.Scene {
       50,
       0xec98a2
     );
-    this.bar.setOrigin(0)
-  }
 
+    this.bar2 = this.add.rectangle(
+      0,
+      0,
+      0,
+      50,
+      0xec98a2
+    );
+
+    this.barArray = [this.bar, this.bar2];
+
+    this.bar.setOrigin(0);
+
+    this.enterConfig = {
+      type: 'Grow', //not case sensitive
+      enterFrom: 'right'
+    };
+
+    this.exitConfig = {
+      type: 'FadeSlide',
+      exitTo: 'top'
+    };
+
+    this.config = {
+      duration: 500,
+      enterFrom: 'left'
+    };
+
+    this.enterTransitions = new GrowTransition(this, this.barArray, this.config);
+
+    //this.enterTransitions = this.transitions.create(this.barArray, this.enterConfig);
+    this.exitTransition = this.transitions.create(this.barArray, this.exitConfig);
+
+    console.log(this.enterTransitions);
+
+    //This will fade all the objects in and then immediately exit
+    this.enterTransitions.enter().then(() => {
+      //this.exitTransition.exit();
+    });
+
+  }
   //update --------------------------------------------------------------------------------------
 
   update() {
@@ -221,7 +261,7 @@ export default class GameScene extends Phaser.Scene {
       this.createOre();
       !this.ore.down;
 
-      console.log(this.containerCount);
+      //console.log(this.containerCount);
 
 
       this.oreSpeed = this.oreSpeed + 0.1;

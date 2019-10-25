@@ -3,6 +3,8 @@ import PreloadScene from './scenes/PreloadScene.js';
 import GameScene from './scenes/GameScene.js';
 import '../leap-0.6.4';
 
+import { TransitionsPlugin } from 'phaser3-transitions';
+
 class Game extends Phaser.Game {
   constructor() {
     super({
@@ -11,6 +13,15 @@ class Game extends Phaser.Game {
       height: 1080,
       title: `Big Bucks Buccaneers`,
       scene: [BootScene, PreloadScene, GameScene],
+      plugins: {
+        scene: [
+          {
+            key: 'transitions',
+            mapping: 'transitions',
+            plugin: TransitionsPlugin
+          }
+        ]
+      },
       backgroundColor: '#ffffff',
       version: `1.0`,
       physics: {
