@@ -36,6 +36,12 @@ export default class GameScene extends Phaser.Scene {
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
+
+    this.timer = this.time.addEvent({
+      delay: 3000,
+      callback: this.moveTrain,
+      loop: true
+    });
   }
 
   preload() {}
@@ -130,6 +136,11 @@ export default class GameScene extends Phaser.Scene {
       this.teller ++;
       // this.containers.push(this.container);
     });
+  }
+
+  moveTrain() {
+    console.log('de beweeg boolean verzetten');
+    this.moveTrainBoolean = !this.moveTrainBoolean;
   }
 
   //Ores --------------------------------------------------------------------------------------
@@ -240,6 +251,15 @@ export default class GameScene extends Phaser.Scene {
     if (this.moveOreBoolean) {
       this.ore.x = this.ore.x + this.oreSpeed;
     }
+
+    if (this.timer.callback.moveTrainBoolean === true) {
+      console.log('train beweegt');
+
+      console.log(this.containerStaticGroup);
+      //this.containerStaticGroup.setVelocityX(20);
+    }
+
+    // console.log(this.moveTrainBoolean, this.timer.callback.moveTrainBoolean);
 
     if (
       this.ore.x > this.screenWidth + this.ore.width / 20 ||
