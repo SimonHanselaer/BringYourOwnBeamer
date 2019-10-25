@@ -26,16 +26,16 @@ export default class GameScene extends Phaser.Scene {
     this.containerStaticGroup = this.physics.add.staticGroup();
 
     this.containerCount = [
-      { color: 'Yellow', count: 0 },
-      { color: 'Blue', count: 0 },
-      { color: 'Red', count: 0 },
-      { color: 'Green', count: 0 }
+      {color: 'Yellow', count: 0},
+      {color: 'Blue', count: 0},
+      {color: 'Red', count: 0},
+      {color: 'Green', count: 0}
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
   }
 
-  preload() { }
+  preload() {}
 
   create() {
     this.createPlayer();
@@ -55,7 +55,7 @@ export default class GameScene extends Phaser.Scene {
       console.log('pointer moved');
     });
 
-    const controllerOptions = { enableGestures: true };
+    const controllerOptions = {enableGestures: true};
     Leap.loop(controllerOptions, frame => {
       if (frame.hands.length > 0) {
         const hand = frame.hands[0];
@@ -117,7 +117,7 @@ export default class GameScene extends Phaser.Scene {
 
       // console.log(this.container.body);
       this.containerPosX = this.containerPosX + 498 + 100;
-      this.teller++;
+      this.teller ++;
       // this.containers.push(this.container);
     });
   }
@@ -185,7 +185,6 @@ export default class GameScene extends Phaser.Scene {
       console.log('een keer maar');
       return e.down;
       // this.createOre();
-
     }
   }
 
@@ -197,7 +196,7 @@ export default class GameScene extends Phaser.Scene {
   createOverlapContainer() {
     this.orestate = this.ore.state - 1;
     if (this.ore.y > this.screenHeight) {
-      this.containerCount[this.orestate].count++;
+      this.containerCount[this.orestate].count ++;
 
       if (this.containerCount[this.orestate].count == 3) {
         console.log(this.containerCount[this.orestate].color, 'vol!');
@@ -236,17 +235,32 @@ export default class GameScene extends Phaser.Scene {
     if (this.ore.down) {
       this.containerCount.forEach(container => {
         if (this.ore.color === container.color) {
-          container.count++;
+          container.count ++;
+          console.log(
+            'container',
+            this.containerStaticGroup.children.entries[0].x
+          );
         }
         if (container.count === 3) {
-          console.log('Container is vol');
+          this.particles = this.add.particles('particle');
+          const emitter = this.particles.createEmitter({
+            speed: 100,
+            scale: {start: 1, end: 0},
+            blendMode: 'ADD'
+          });
+          emitter.setPosition(
+            this.containerStaticGroup.children.entries[0].x,
+            this.containerStaticGroup.children.entries[0].y
+          );
+          emitter.setSpeed(200);
+          emitter.setBlendMode(Phaser.BlendModes.ADD);
+          // console.log('Container is vol');
         }
       });
       this.createOre();
       !this.ore.down;
 
       console.log(this.containerCount);
-
 
       this.oreSpeed = this.oreSpeed + 0.1;
       this.moveOreBoolean = true;
