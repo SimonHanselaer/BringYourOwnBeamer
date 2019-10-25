@@ -61,7 +61,7 @@ export default class GameScene extends Phaser.Scene {
     this.input.on('pointermove', pointer => {
       // console.log(player);
       // console.log(pointer);
-      player.setPosition(pointer.x, this.sys.game.config.height / 2 - 150);
+      player.setPosition(pointer.x, this.sys.game.config.height / 2 - 100);
       //console.log('pointer moved');
     });
 
@@ -139,7 +139,7 @@ export default class GameScene extends Phaser.Scene {
     this.ore = new Ore(
       this,
       this.orePosY,
-      this.sys.game.config.height / 2 - 150,
+      this.sys.game.config.height / 2 - 100,
       this.random
     );
     this.ore.setScale(0.1, 0.1);
@@ -159,7 +159,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.containerStaticGroup.children.entries.forEach(container => {
       this.containerCount.forEach(counts => {
-        console.log('Count: ', counts.color, counts.count);
+        // console.log('Count: ', counts.color, counts.count);
         if (
           container.color === this.ore.color &&
           counts.color === this.ore.color &&
@@ -169,7 +169,7 @@ export default class GameScene extends Phaser.Scene {
           if (this.ore.down) {
             this.createOre();
           }
-          console.log('collider toegevoegd tussen ore en container');
+          // console.log('collider toegevoegd tussen ore en container');
         }
       });
     });
@@ -179,7 +179,7 @@ export default class GameScene extends Phaser.Scene {
     if (!e.down) {
       e.down = true;
       //
-      console.log('een keer maar');
+      // console.log('een keer maar');
       return e.down;
     }
   }
@@ -192,9 +192,9 @@ export default class GameScene extends Phaser.Scene {
   //progressBar --------------------------------------------------------------------------------------
 
   createProgressBar() {
-    this.bar = this.add.rectangle(0, 0, this.progress * 320, 50, 0xec98a2);
+    this.bar = this.add.rectangle(0, 0, this.progress * 320, 390, 0xec98a2);
 
-    this.bar2 = this.add.rectangle(0, 0, 0, 50, 0xec98a2);
+    this.bar2 = this.add.rectangle(0, 0, 0, 390, 0xec98a2);
 
     this.barArray = [this.bar, this.bar2];
 
@@ -227,7 +227,7 @@ export default class GameScene extends Phaser.Scene {
       this.exitConfig
     );
 
-    console.log(this.enterTransitions);
+    // console.log(this.enterTransitions);
 
     //This will fade all the objects in and then immediately exit
     this.enterTransitions.enter().then(() => {
