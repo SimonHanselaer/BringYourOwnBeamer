@@ -152,8 +152,12 @@ export default class GameScene extends Phaser.Scene {
 
     this.containerStaticGroup.children.entries.forEach(container => {
       this.containerCount.forEach(counts => {
-        //console.log('Count: ', counts.color, counts.count);
-        if (container.color === this.ore.color && counts.color === this.ore.color && counts.count < 3) {
+        console.log('Count: ', counts.color, counts.count);
+        if (
+          container.color === this.ore.color &&
+          counts.color === this.ore.color &&
+          counts.count < 3
+        ) {
           this.physics.add.collider(this.ore, container, this.handleCollideA);
           if (this.ore.down) {
             this.createOre();
@@ -161,7 +165,6 @@ export default class GameScene extends Phaser.Scene {
           console.log('collider toegevoegd tussen ore en container');
         }
       });
-
     });
   }
 
@@ -171,7 +174,6 @@ export default class GameScene extends Phaser.Scene {
       //
       console.log('een keer maar');
       return e.down;
-
     }
   }
 
@@ -255,14 +257,25 @@ export default class GameScene extends Phaser.Scene {
           this.createProgressBar();
         }
         if (container.count === 3) {
-          console.log('Container is vol');
+          this.particles = this.add.particles('particle');
+          const emitter = this.particles.createEmitter({
+            speed: 100,
+            scale: { start: 1, end: 0 },
+            blendMode: 'ADD'
+          });
+          emitter.setPosition(
+            this.containerStaticGroup.children.entries[0].x,
+            this.containerStaticGroup.children.entries[0].y
+          );
+          emitter.setSpeed(200);
+          emitter.setBlendMode(Phaser.BlendModes.ADD);
+          // console.log('Container is vol');
         }
       });
       this.createOre();
       !this.ore.down;
 
       //console.log(this.containerCount);
-
 
       this.oreSpeed = this.oreSpeed + 0.1;
       this.moveOreBoolean = true;
