@@ -27,10 +27,10 @@ export default class GameScene extends Phaser.Scene {
     this.containerStaticGroup = this.physics.add.staticGroup();
 
     this.containerCount = [
-      {color: 'Yellow', count: 0},
-      {color: 'Blue', count: 0},
-      {color: 'Red', count: 0},
-      {color: 'Green', count: 0}
+      {id: 0, color: 'Yellow', count: 0},
+      {id: 1, color: 'Blue', count: 0},
+      {id: 2, color: 'Red', count: 0},
+      {id: 3, color: 'Green', count: 0}
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
@@ -150,7 +150,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.containerStaticGroup.children.entries.forEach(container => {
       this.containerCount.forEach(counts => {
-        console.log('Count: ', counts.color, counts.count);
+        //console.log('Count: ', counts.color, counts.count);
         if (
           container.color === this.ore.color &&
           counts.color === this.ore.color &&
@@ -209,6 +209,7 @@ export default class GameScene extends Phaser.Scene {
           container.count ++;
           this.progress ++;
           this.createProgressBar();
+          console.log('container', container);
         }
         if (container.count === 3) {
           this.particles = this.add.particles('particle');
@@ -218,8 +219,8 @@ export default class GameScene extends Phaser.Scene {
             blendMode: 'ADD'
           });
           emitter.setPosition(
-            this.containerStaticGroup.children.entries[0].x,
-            this.containerStaticGroup.children.entries[0].y
+            this.containerStaticGroup.children.entries[container.id].x,
+            this.containerStaticGroup.children.entries[container.id].y
           );
           emitter.setSpeed(200);
           emitter.setBlendMode(Phaser.BlendModes.ADD);
