@@ -2,6 +2,8 @@ import Ore from '../gameobjects/Ore';
 import Player from '../gameobjects/Player';
 import Container from '../gameobjects/Container';
 
+import {GrowTransition} from 'phaser3-transitions';
+
 const map = (value, in_min, in_max, out_min, out_max) => {
   return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
 };
@@ -34,16 +36,29 @@ export default class GameScene extends Phaser.Scene {
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
+
+    this.timer = this.time.addEvent({
+      delay: 3000,
+      callback: this.moveTrain,
+      loop: true
+    });
   }
 
   preload() {}
 
   create() {
+    this.createBackground();
     this.createPlayer();
     this.createControls(this.player);
     this.createContainers();
     this.createOre();
     this.createProgressBar();
+  }
+
+  //Styling-----------------------------------------
+
+  createBackground() {
+    this.add.image(this.screenWidth / 2, this.screenHeight / 2, 'background');
   }
 
   //Controls --------------------------------------------------------------------------------------
@@ -52,8 +67,8 @@ export default class GameScene extends Phaser.Scene {
     this.input.on('pointermove', pointer => {
       // console.log(player);
       // console.log(pointer);
-      player.setPosition(pointer.x, this.sys.game.config.height / 2 - 150);
-      console.log('pointer moved');
+      player.setPosition(pointer.x, this.sys.game.config.height / 2 - 100);
+      //console.log('pointer moved');
     });
 
     const controllerOptions = {enableGestures: true};
@@ -89,7 +104,7 @@ export default class GameScene extends Phaser.Scene {
   //Container --------------------------------------------------------------------------------------
 
   createContainers() {
-    this.containerPosX = 249;
+    this.containerPosX = 475 + 276;
     this.teller = 0;
     this.colors.forEach(color => {
       // this.container = new Container(
@@ -102,13 +117,13 @@ export default class GameScene extends Phaser.Scene {
       this.containerStaticGroup
         .create(
           this.containerPosX,
-          this.screenHeight - 182,
+          this.screenHeight - 346 - 64,
           `container${color}`
         )
         .refreshBody();
 
       this.containerStaticGroup.children.entries[this.teller].color = color;
-      console.log(this.containerStaticGroup.children.entries[this.teller]);
+      //console.log(this.containerStaticGroup.children.entries[this.teller]);
 
       // console.log(`container ${color} aangemaakt`);
       // console.log(this.container.width);
@@ -123,6 +138,11 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
+  moveTrain() {
+    console.log('de beweeg boolean verzetten');
+    this.moveTrainBoolean = !this.moveTrainBoolean;
+  }
+
   //Ores --------------------------------------------------------------------------------------
 
   createOre() {
@@ -130,7 +150,7 @@ export default class GameScene extends Phaser.Scene {
     this.ore = new Ore(
       this,
       this.orePosY,
-      this.sys.game.config.height / 2 - 150,
+      this.sys.game.config.height / 2 - 100,
       this.random
     );
     this.ore.setScale(0.1, 0.1);
@@ -145,12 +165,11 @@ export default class GameScene extends Phaser.Scene {
       this
     );
 
-    console.log('ore', this.ore);
-    console.log(this.physics);
+    //console.log('ore', this.ore);
+    //console.log(this.physics);
 
     this.containerStaticGroup.children.entries.forEach(container => {
       this.containerCount.forEach(counts => {
-        //console.log('Count: ', counts.color, counts.count);
         if (
           container.color === this.ore.color &&
           counts.color === this.ore.color &&
@@ -160,7 +179,7 @@ export default class GameScene extends Phaser.Scene {
           if (this.ore.down) {
             this.createOre();
           }
-          console.log('collider toegevoegd tussen ore en container');
+          // console.log('collider toegevoegd tussen ore en container');
         }
       });
     });
@@ -170,7 +189,7 @@ export default class GameScene extends Phaser.Scene {
     if (!e.down) {
       e.down = true;
       //
-      console.log('een keer maar');
+      // console.log('een keer maar');
       return e.down;
     }
   }
@@ -183,16 +202,63 @@ export default class GameScene extends Phaser.Scene {
   //progressBar --------------------------------------------------------------------------------------
 
   createProgressBar() {
-    this.bar = this.add.rectangle(0, 0, this.progress * 320, 50, 0xec98a2);
-    this.bar.setOrigin(0);
-  }
+    this.bar = this.add.rectangle(0, 0, this.progress * 320, 390, 0xec98a2);
 
+    this.bar2 = this.add.rectangle(0, 0, 0, 390, 0xec98a2);
+
+    this.barArray = [this.bar, this.bar2];
+
+    this.bar.setOrigin(0);
+
+    this.enterConfig = {
+      type: 'Grow', //not case sensitive
+      enterFrom: 'right'
+    };
+
+    this.exitConfig = {
+      type: 'FadeSlide',
+      exitTo: 'top'
+    };
+
+    this.config = {
+      duration: 500,
+      enterFrom: 'left'
+    };
+
+    this.enterTransitions = new GrowTransition(
+      this,
+      this.barArray,
+      this.config
+    );
+
+    //this.enterTransitions = this.transitions.create(this.barArray, this.enterConfig);
+    this.exitTransition = this.transitions.create(
+      this.barArray,
+      this.exitConfig
+    );
+
+    // console.log(this.enterTransitions);
+
+    //This will fade all the objects in and then immediately exit
+    this.enterTransitions.enter().then(() => {
+      //this.exitTransition.exit();
+    });
+  }
   //update --------------------------------------------------------------------------------------
 
   update() {
     if (this.moveOreBoolean) {
       this.ore.x = this.ore.x + this.oreSpeed;
     }
+
+    if (this.timer.callback.moveTrainBoolean === true) {
+      console.log('train beweegt');
+
+      console.log(this.containerStaticGroup);
+      //this.containerStaticGroup.setVelocityX(20);
+    }
+
+    // console.log(this.moveTrainBoolean, this.timer.callback.moveTrainBoolean);
 
     if (
       this.ore.x > this.screenWidth + this.ore.width / 20 ||
@@ -211,6 +277,7 @@ export default class GameScene extends Phaser.Scene {
           this.createProgressBar();
           console.log('container', container);
         }
+
         if (container.count === 3) {
           this.particles = this.add.particles('particle');
           const emitter = this.particles.createEmitter({
@@ -230,7 +297,7 @@ export default class GameScene extends Phaser.Scene {
       this.createOre();
       !this.ore.down;
 
-      console.log(this.containerCount);
+      //console.log(this.containerCount);
 
       this.oreSpeed = this.oreSpeed + 0.1;
       this.moveOreBoolean = true;

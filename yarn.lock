@@ -5242,6 +5242,11 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+phaser3-transitions@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/phaser3-transitions/-/phaser3-transitions-1.0.1.tgz#e351a45098fac8162e8b47296e86a5104c6f4a04"
+  integrity sha512-jVJhOykb/1oP9c0xS7DA7lX36CwKkZ89f5K6h2VycK0Jz04sxSRisB8x2ZH74IGNWAsdSN7ka+SwXvc589s8Sw==
+
 phaser@^3.20.1:
   version "3.20.1"
   resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.20.1.tgz#7c9211e59dee58a0a8a6df1fd079cb709646eab7"
