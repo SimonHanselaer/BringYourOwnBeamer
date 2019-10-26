@@ -300,12 +300,9 @@ export default class GameScene extends Phaser.Scene {
           const emitter = this.particles.createEmitter({
             speed: 100,
             scale: {start: 0.4, end: 0},
-<<<<<<< HEAD
             // blendMode: 'ADD',
             maxParticles: 75,
-=======
-            maxParticles: 200,
->>>>>>> 27d8a2575a7599cfe8a16afaead9ce039c8e7cd5
+
             accelerationY: - 500,
             frequency: 75,
             lifespan: 800
@@ -315,13 +312,8 @@ export default class GameScene extends Phaser.Scene {
             this.containerStaticGroup.children.entries[container.id].y - 100
           );
           emitter.setSpeed(200);
-<<<<<<< HEAD
+
           emitter.setAlpha(0.8);
-          //emitter.setBlendMode(Phaser.BlendModes.ADD);
-          // console.log('Container is vol');
-=======
-          emitter.setAlpha(0.5);
->>>>>>> 27d8a2575a7599cfe8a16afaead9ce039c8e7cd5
           this.musicFull = this.sound.add('full', {volume: 0.5});
           this.musicFull.play();
         }
