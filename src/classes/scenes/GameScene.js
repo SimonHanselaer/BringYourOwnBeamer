@@ -112,7 +112,8 @@ export default class GameScene extends Phaser.Scene {
       this.sys.game.config.width / 2,
       this.sys.game.config.height / 2
     );
-    this.player.setScale(0.1, 0.1);
+
+    this.lastPos = this.player.x;
   }
 
   //Container --------------------------------------------------------------------------------------
@@ -362,6 +363,18 @@ export default class GameScene extends Phaser.Scene {
     if (this.completedContainers === 12) {
       //console.log('alles vol');
       this.scene.start(`end`);
+    }
+
+    if (this.lastPos > this.player.x) {
+      console.log('bewogen naar links');
+      this.lastPos = this.player.x;
+      this.player.setRotation(- 0.5);
+    }
+
+    if (this.lastPos < this.player.x) {
+      console.log('bewogen naar rechts');
+      this.lastPos = this.player.x;
+      this.player.setRotation(0.5);
     }
   }
 }
