@@ -18,7 +18,6 @@ export default class BeginScene extends Phaser.Scene {
   }
   preload() {}
   create() {
-    //console.log('in create endscene');
     this.createBackground();
     this.createTrain();
     this.arrive();
@@ -38,7 +37,6 @@ export default class BeginScene extends Phaser.Scene {
   }
 
   startGame() {
-    console.log('start game');
     this.scene.start(`game`);
   }
 
