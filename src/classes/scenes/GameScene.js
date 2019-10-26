@@ -2,7 +2,7 @@ import Ore from '../gameobjects/Ore';
 import Player from '../gameobjects/Player';
 import Container from '../gameobjects/Container';
 
-import { GrowTransition } from 'phaser3-transitions';
+import {GrowTransition} from 'phaser3-transitions';
 
 const map = (value, in_min, in_max, out_min, out_max) => {
   return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
@@ -24,7 +24,6 @@ export default class GameScene extends Phaser.Scene {
     this.moveOreBoolean = true;
     this.oreSpeed = 5;
 
-
     this.positionState = 1;
     this.positionToDo = 'verhogen';
 
@@ -35,11 +34,10 @@ export default class GameScene extends Phaser.Scene {
     this.containerStaticGroup = this.physics.add.staticGroup();
 
     this.containerCount = [
-
-      { id: 0, color: 'Yellow', count: 0, particlesBoolean: false },
-      { id: 1, color: 'Blue', count: 0, particlesBoolean: false },
-      { id: 2, color: 'Red', count: 0, particlesBoolean: false },
-      { id: 3, color: 'Green', count: 0, particlesBoolean: false }
+      {id: 0, color: 'Yellow', count: 0, particlesBoolean: false},
+      {id: 1, color: 'Blue', count: 0, particlesBoolean: false},
+      {id: 2, color: 'Red', count: 0, particlesBoolean: false},
+      {id: 3, color: 'Green', count: 0, particlesBoolean: false}
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
@@ -51,10 +49,11 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
-  preload() { }
+  preload() {}
 
   create() {
     this.createBackground();
+    this.createTrain();
     this.createPlayer();
     this.createControls(this.player);
     this.createContainers();
@@ -68,6 +67,14 @@ export default class GameScene extends Phaser.Scene {
     this.add.image(this.screenWidth / 2, this.screenHeight / 2, 'background');
   }
 
+  createTrain() {
+    this.train = this.add.image(
+      this.screenWidth / 2,
+      this.screenHeight / 2,
+      'trainEmpty'
+    );
+  }
+
   //Controls --------------------------------------------------------------------------------------
 
   createControls(player) {
@@ -78,7 +85,7 @@ export default class GameScene extends Phaser.Scene {
       //console.log('pointer moved');
     });
 
-    const controllerOptions = { enableGestures: true };
+    const controllerOptions = {enableGestures: true};
     Leap.loop(controllerOptions, frame => {
       if (frame.hands.length > 0) {
         const hand = frame.hands[0];
@@ -142,7 +149,7 @@ export default class GameScene extends Phaser.Scene {
       //this.containerPosX = this.containerPosX + 498 + 100;
       //this.teller++;
       this.containerPosX = this.containerPosX + 552 + 116;
-      this.teller++;
+      this.teller ++;
       // this.containers.push(this.container);
     });
   }
@@ -150,7 +157,6 @@ export default class GameScene extends Phaser.Scene {
   moveTrain() {
     //console.log('de beweeg boolean verzetten');
     this.moveTrainBoolean = !this.moveTrainBoolean;
-
   }
 
   //Ores --------------------------------------------------------------------------------------
@@ -267,21 +273,25 @@ export default class GameScene extends Phaser.Scene {
 
       //console.log(this.containerStaticGroup.children.entries);
 
-      for (this.teller2 = 0; this.teller2 < this.containerStaticGroup.children.entries.length; this.teller2++) {
-
+      for (
+        this.teller2 = 0;
+        this.teller2 < this.containerStaticGroup.children.entries.length;
+        this.teller2 ++
+      ) {
         //console.log(this.containerStaticGroup.children.entries[this.teller2]);
-        this.containerStaticGroup.children.entries[this.teller2].x++;
-        this.containerStaticGroup.children.entries[this.teller2].body.x++;
-
+        this.containerStaticGroup.children.entries[this.teller2].x ++;
+        this.containerStaticGroup.children.entries[this.teller2].body.x ++;
       }
       //this.containerStaticGroup.setVelocityX(20);
     } else {
-      for (this.teller2 = 0; this.teller2 < this.containerStaticGroup.children.entries.length; this.teller2++) {
-
+      for (
+        this.teller2 = 0;
+        this.teller2 < this.containerStaticGroup.children.entries.length;
+        this.teller2 ++
+      ) {
         //console.log(this.containerStaticGroup.children.entries[this.teller2]);
-        this.containerStaticGroup.children.entries[this.teller2].x--;
-        this.containerStaticGroup.children.entries[this.teller2].body.x--;
-
+        this.containerStaticGroup.children.entries[this.teller2].x --;
+        this.containerStaticGroup.children.entries[this.teller2].body.x --;
       }
     }
 
@@ -299,11 +309,11 @@ export default class GameScene extends Phaser.Scene {
     if (this.ore.down) {
       this.containerCount.forEach(container => {
         if (this.ore.color === container.color) {
-          container.count++;
-          this.progress++;
+          container.count ++;
+          this.progress ++;
           this.createProgressBar();
           //console.log('container', container);
-          this.completedContainers++;
+          this.completedContainers ++;
         }
 
         if (container.count === 3 && !container.particlesBoolean) {
@@ -312,10 +322,10 @@ export default class GameScene extends Phaser.Scene {
           this.particles = this.add.particles(`particle${container.color}`);
           const emitter = this.particles.createEmitter({
             speed: 100,
-            scale: { start: .4, end: 0 },
+            scale: {start: 0.4, end: 0},
             // blendMode: 'ADD',
             maxParticles: 500,
-            accelerationY: -500,
+            accelerationY: - 500,
             frequency: 5
           });
           emitter.setPosition(
@@ -323,7 +333,7 @@ export default class GameScene extends Phaser.Scene {
             this.containerStaticGroup.children.entries[container.id].y - 100
           );
           emitter.setSpeed(200);
-          emitter.setAlpha(.5);
+          emitter.setAlpha(0.5);
           //emitter.setBlendMode(Phaser.BlendModes.ADD);
           // console.log('Container is vol');
         }

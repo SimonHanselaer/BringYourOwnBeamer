@@ -40,7 +40,7 @@ export default class EndScene extends Phaser.Scene {
     this.train = this.add.image(
       this.screenWidth / 2,
       this.screenHeight / 2,
-      'train'
+      'trainFull'
     );
   }
 
