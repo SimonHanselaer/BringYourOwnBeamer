@@ -24,18 +24,22 @@ export default class GameScene extends Phaser.Scene {
     this.moveOreBoolean = true;
     this.oreSpeed = 5;
 
+
     this.positionState = 1;
     this.positionToDo = 'verhogen';
+
+    this.completedContainers = 0;
 
     this.containers = [];
 
     this.containerStaticGroup = this.physics.add.staticGroup();
 
     this.containerCount = [
-      { color: 'Yellow', count: 0 },
-      { color: 'Blue', count: 0 },
-      { color: 'Red', count: 0 },
-      { color: 'Green', count: 0 }
+
+      { id: 0, color: 'Yellow', count: 0 },
+      { id: 1, color: 'Blue', count: 0 },
+      { id: 2, color: 'Red', count: 0 },
+      { id: 3, color: 'Green', count: 0 }
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
@@ -135,14 +139,16 @@ export default class GameScene extends Phaser.Scene {
       // this.container.body.checkCollision.right = false;
 
       // console.log(this.container.body);
-      this.containerPosX = this.containerPosX + 498 + 100;
+      //this.containerPosX = this.containerPosX + 498 + 100;
+      //this.teller++;
+      this.containerPosX = this.containerPosX + 552 + 116;
       this.teller++;
       // this.containers.push(this.container);
     });
   }
 
   moveTrain() {
-    console.log('de beweeg boolean verzetten');
+    //console.log('de beweeg boolean verzetten');
     this.moveTrainBoolean = !this.moveTrainBoolean;
 
   }
@@ -174,7 +180,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.containerStaticGroup.children.entries.forEach(container => {
       this.containerCount.forEach(counts => {
-        // console.log('Count: ', counts.color, counts.count);
         if (
           container.color === this.ore.color &&
           counts.color === this.ore.color &&
@@ -249,6 +254,7 @@ export default class GameScene extends Phaser.Scene {
       //this.exitTransition.exit();
     });
   }
+
   //update --------------------------------------------------------------------------------------
 
   update() {
@@ -287,7 +293,7 @@ export default class GameScene extends Phaser.Scene {
     ) {
       this.ore.destroy();
       this.createOre();
-      this.oreSpeed = this.oreSpeed + 0.1;
+      this.oreSpeed = this.oreSpeed + 1.5;
       this.moveOreBoolean = true;
     }
     if (this.ore.down) {
@@ -296,7 +302,10 @@ export default class GameScene extends Phaser.Scene {
           container.count++;
           this.progress++;
           this.createProgressBar();
+          //console.log('container', container);
+          this.completedContainers++;
         }
+
         if (container.count === 3) {
           this.particles = this.add.particles('particle');
           const emitter = this.particles.createEmitter({
@@ -305,8 +314,8 @@ export default class GameScene extends Phaser.Scene {
             blendMode: 'ADD'
           });
           emitter.setPosition(
-            this.containerStaticGroup.children.entries[0].x,
-            this.containerStaticGroup.children.entries[0].y
+            this.containerStaticGroup.children.entries[container.id].x,
+            this.containerStaticGroup.children.entries[container.id].y
           );
           emitter.setSpeed(200);
           emitter.setBlendMode(Phaser.BlendModes.ADD);
@@ -320,11 +329,18 @@ export default class GameScene extends Phaser.Scene {
 
       //console.log(this.containerCount);
 
-      this.oreSpeed = this.oreSpeed + 0.1;
+      this.oreSpeed = this.oreSpeed + 1.5;
       this.moveOreBoolean = true;
     }
     // if (this.ore.body.onFloor()) {
     //   console.log('er is een collide');
     // }
+
+    console.log(this.completedContainers);
+
+    if (this.completedContainers === 12) {
+      //console.log('alles vol');
+      this.scene.start(`end`);
+    }
   }
 }
