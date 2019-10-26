@@ -164,6 +164,10 @@ export default class GameScene extends Phaser.Scene {
 
   //Ores --------------------------------------------------------------------------------------
 
+  // createRandom() {
+  //   this.random = Math.ceil(Math.random() * 4);
+  // }
+
   createOre() {
     this.random = Math.ceil(Math.random() * 4);
     this.ore = new Ore(
@@ -363,7 +367,7 @@ export default class GameScene extends Phaser.Scene {
 
     //console.log(this.completedContainers);
 
-    if (this.containerCount[0].count === 3 && this.containerCount[1].count === 3 && this.containerCount[2].count === 3 && this.containerCount[3].count === 3) {
+    if (this.containerCount[0].count == 3 && this.containerCount[1].count == 3 && this.containerCount[2].count == 3 && this.containerCount[3].count == 3) {
       this.scene.start(`end`);
     }
 
