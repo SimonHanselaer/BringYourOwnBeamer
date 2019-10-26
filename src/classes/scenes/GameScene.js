@@ -1,6 +1,5 @@
 import Ore from '../gameobjects/Ore';
 import Player from '../gameobjects/Player';
-import Container from '../gameobjects/Container';
 
 import {GrowTransition} from 'phaser3-transitions';
 
@@ -53,12 +52,12 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.createBackground();
-    this.createTrain();
     this.createPlayer();
     this.createControls(this.player);
     this.createContainers();
-    this.createOre();
     this.createProgressBar();
+    this.createTrain();
+    this.createOre();
   }
 
   //Styling-----------------------------------------
@@ -73,6 +72,8 @@ export default class GameScene extends Phaser.Scene {
       this.screenHeight / 2,
       'trainEmpty'
     );
+
+    this.containerStaticGroup.add(this.train);
   }
 
   //Controls --------------------------------------------------------------------------------------
@@ -81,7 +82,7 @@ export default class GameScene extends Phaser.Scene {
     this.input.on('pointermove', pointer => {
       // console.log(player);
       // console.log(pointer);
-      player.setPosition(pointer.x, this.sys.game.config.height / 2 - 100);
+      player.setPosition(pointer.x, this.sys.game.config.height / 2 - 50);
       //console.log('pointer moved');
     });
 
@@ -99,7 +100,7 @@ export default class GameScene extends Phaser.Scene {
           realPosition = this.screenWidth;
         }
 
-        player.setPosition(realPosition, this.sys.game.config.height / 2 - 150);
+        player.setPosition(realPosition, this.sys.game.config.height / 2 - 50);
       }
     });
   }
@@ -110,7 +111,7 @@ export default class GameScene extends Phaser.Scene {
     this.player = new Player(
       this,
       this.sys.game.config.width / 2,
-      this.sys.game.config.height / 2
+      this.sys.game.config.height / 2 - 50
     );
 
     this.lastPos = this.player.x;
@@ -132,7 +133,8 @@ export default class GameScene extends Phaser.Scene {
       this.containerStaticGroup
         .create(
           this.containerPosX,
-          this.screenHeight - 346 - 64,
+          this.screenHeight / 2 + 170,
+          // this.screenHeight - 346 - 64,
           `container${color}`
         )
         .refreshBody();
@@ -162,12 +164,16 @@ export default class GameScene extends Phaser.Scene {
 
   //Ores --------------------------------------------------------------------------------------
 
+  // createRandom() {
+  //   this.random = Math.ceil(Math.random() * 4);
+  // }
+
   createOre() {
     this.random = Math.ceil(Math.random() * 4);
     this.ore = new Ore(
       this,
       this.orePosY,
-      this.sys.game.config.height / 2 - 100,
+      this.sys.game.config.height / 2 - 50,
       this.random
     );
     this.ore.setScale(0.1, 0.1);
@@ -189,8 +195,9 @@ export default class GameScene extends Phaser.Scene {
       this.containerCount.forEach(counts => {
         if (
           container.color === this.ore.color &&
-          counts.color === this.ore.color &&
-          counts.count < 3
+          counts.color === this.ore.color
+          //counts.color === this.ore.color &&
+          //counts.count < 3
         ) {
           this.physics.add.collider(this.ore, container, this.handleCollideA);
           if (this.ore.down) {
@@ -311,7 +318,9 @@ export default class GameScene extends Phaser.Scene {
       this.containerCount.forEach(container => {
         if (this.ore.color === container.color) {
           container.count ++;
-          this.progress ++;
+          if (container.count < 4) {
+            this.progress ++;
+          }
           this.createProgressBar();
           //console.log('container', container);
           this.completedContainers ++;
@@ -328,9 +337,9 @@ export default class GameScene extends Phaser.Scene {
             speed: 100,
             scale: {start: 0.4, end: 0},
             // blendMode: 'ADD',
-            maxParticles: 500,
+            maxParticles: 200,
             accelerationY: - 500,
-            frequency: 5
+            frequency: 15
           });
           emitter.setPosition(
             this.containerStaticGroup.children.entries[container.id].x,
@@ -360,9 +369,13 @@ export default class GameScene extends Phaser.Scene {
 
     //console.log(this.completedContainers);
 
-    if (this.completedContainers === 12) {
-      //console.log('alles vol');
-      this.scene.start(`end`);
+    if (
+      this.containerCount[0].count >= 3 &&
+      this.containerCount[1].count >= 3 &&
+      this.containerCount[2].count >= 3 &&
+      this.containerCount[3].count >= 3
+    ) {
+      this.scene.start(`end`, this.train.x);
     }
 
     if (this.lastPos > this.player.x) {
