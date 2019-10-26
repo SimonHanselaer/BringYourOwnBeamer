@@ -27,7 +27,7 @@ export default class EndScene extends Phaser.Scene {
       loop: false
     });
   }
-  preload() { }
+  preload() {}
   create() {
     //console.log('in create endscene');
     this.createBackground();
@@ -48,7 +48,7 @@ export default class EndScene extends Phaser.Scene {
   }
 
   closeTrain() {
-    this.musicClose = this.sound.add('close', { volume: 0.7 });
+    this.musicClose = this.sound.add('close', {volume: 0.7});
     this.musicClose.play();
   }
 
@@ -61,7 +61,7 @@ export default class EndScene extends Phaser.Scene {
 
   restartGame() {
     console.log('herstart game');
-    this.scene.start(`game`);
+    this.scene.start(`begin`);
   }
 
   update() {

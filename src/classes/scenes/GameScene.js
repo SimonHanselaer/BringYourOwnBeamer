@@ -58,6 +58,7 @@ export default class GameScene extends Phaser.Scene {
     this.createProgressBar();
     this.createTrain();
     this.createOre();
+    this.createAmbient();
   }
 
   //Styling-----------------------------------------
@@ -74,6 +75,11 @@ export default class GameScene extends Phaser.Scene {
     );
 
     this.containerStaticGroup.add(this.train);
+  }
+
+  createAmbient() {
+    this.musicAmbient = this.sound.add('ambient', {volume: 0.7}, true);
+    this.musicAmbient.play();
   }
 
   //Controls --------------------------------------------------------------------------------------

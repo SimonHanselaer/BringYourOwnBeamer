@@ -22,6 +22,8 @@ import './../../assets/sounds/leavingTrain.mp3';
 import './../../assets/sounds/match.mp3';
 import './../../assets/sounds/close.mp3';
 import './../../assets/sounds/full.mp3';
+import './../../assets/sounds/arrive.mp3';
+import './../../assets/sounds/ambient.mp3';
 
 export default class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -54,9 +56,11 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.audio(`match`, `./assets/sounds/match.mp3`);
     this.load.audio(`close`, `./assets/sounds/close.mp3`);
     this.load.audio(`full`, `./assets/sounds/full.mp3`);
+    this.load.audio(`arrive`, `./assets/sounds/arrive.mp3`);
+    this.load.audio(`ambient`, `./assets/sounds/ambient.mp3`);
   }
   create() {
-    this.scene.start(`game`);
+    this.scene.start(`begin`);
   }
   update() {}
 }

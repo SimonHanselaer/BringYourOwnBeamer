@@ -2,6 +2,7 @@ import BootScene from './scenes/BootScene.js';
 import PreloadScene from './scenes/PreloadScene.js';
 import GameScene from './scenes/GameScene.js';
 import EndScene from './scenes/EndScene.js';
+import BeginScene from './scenes/BeginScene.js';
 
 import '../leap-0.6.4';
 
@@ -14,7 +15,7 @@ class Game extends Phaser.Game {
       width: 3840,
       height: 1080,
       title: `CarGO`,
-      scene: [BootScene, PreloadScene, GameScene, EndScene],
+      scene: [BootScene, PreloadScene, GameScene, EndScene, BeginScene],
       plugins: {
         scene: [
           {
