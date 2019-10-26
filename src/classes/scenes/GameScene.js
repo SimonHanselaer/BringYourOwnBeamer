@@ -58,6 +58,7 @@ export default class GameScene extends Phaser.Scene {
     this.createProgressBar();
     this.createTrain();
     this.createOre();
+    this.createAmbient();
   }
 
   //Styling-----------------------------------------
@@ -74,6 +75,11 @@ export default class GameScene extends Phaser.Scene {
     );
 
     this.containerStaticGroup.add(this.train);
+  }
+
+  createAmbient() {
+    this.musicAmbient = this.sound.add('ambient', {volume: 0.7}, true);
+    this.musicAmbient.play();
   }
 
   //Controls --------------------------------------------------------------------------------------
@@ -170,6 +176,20 @@ export default class GameScene extends Phaser.Scene {
 
   createOre() {
     this.random = Math.ceil(Math.random() * 4);
+    console.log('0', this.random);
+    this.containerCount.forEach(container => {
+      if (container.count >= 3 && container.id + 1 === this.random) {
+        // console.log(container.id);
+        this.random = Math.ceil(Math.random() * 4);
+        console.log('1', this.random);
+        if (container.count >= 3 && container.id + 1 === this.random) {
+          // console.log(container.id);
+          this.random = Math.ceil(Math.random() * 4);
+          console.log('2', this.random);
+        }
+      }
+    });
+
     this.ore = new Ore(
       this,
       this.orePosY,
@@ -311,7 +331,7 @@ export default class GameScene extends Phaser.Scene {
     ) {
       this.ore.destroy();
       this.createOre();
-      this.oreSpeed = this.oreSpeed + 1.5;
+      this.oreSpeed = this.oreSpeed + 1.3;
       this.moveOreBoolean = true;
     }
     if (this.ore.down) {
