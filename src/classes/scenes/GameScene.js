@@ -36,10 +36,10 @@ export default class GameScene extends Phaser.Scene {
 
     this.containerCount = [
 
-      { id: 0, color: 'Yellow', count: 0 },
-      { id: 1, color: 'Blue', count: 0 },
-      { id: 2, color: 'Red', count: 0 },
-      { id: 3, color: 'Green', count: 0 }
+      { id: 0, color: 'Yellow', count: 0, particlesBoolean: false },
+      { id: 1, color: 'Blue', count: 0, particlesBoolean: false },
+      { id: 2, color: 'Red', count: 0, particlesBoolean: false },
+      { id: 3, color: 'Green', count: 0, particlesBoolean: false }
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
@@ -263,7 +263,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.timer.callback.moveTrainBoolean === true) {
-      console.log('train beweegt');
+      //console.log('train beweegt');
 
       //console.log(this.containerStaticGroup.children.entries);
 
@@ -306,19 +306,25 @@ export default class GameScene extends Phaser.Scene {
           this.completedContainers++;
         }
 
-        if (container.count === 3) {
-          this.particles = this.add.particles('particle');
+        if (container.count === 3 && !container.particlesBoolean) {
+          console.log('particle added');
+          container.particlesBoolean = true;
+          this.particles = this.add.particles(`particle${container.color}`);
           const emitter = this.particles.createEmitter({
             speed: 100,
-            scale: { start: 1, end: 0 },
-            blendMode: 'ADD'
+            scale: { start: .4, end: 0 },
+            // blendMode: 'ADD',
+            maxParticles: 500,
+            accelerationY: -500,
+            frequency: 5
           });
           emitter.setPosition(
             this.containerStaticGroup.children.entries[container.id].x,
-            this.containerStaticGroup.children.entries[container.id].y
+            this.containerStaticGroup.children.entries[container.id].y - 100
           );
           emitter.setSpeed(200);
-          emitter.setBlendMode(Phaser.BlendModes.ADD);
+          emitter.setAlpha(.5);
+          //emitter.setBlendMode(Phaser.BlendModes.ADD);
           // console.log('Container is vol');
         }
       });
@@ -336,7 +342,7 @@ export default class GameScene extends Phaser.Scene {
     //   console.log('er is een collide');
     // }
 
-    console.log(this.completedContainers);
+    //console.log(this.completedContainers);
 
     if (this.completedContainers === 12) {
       //console.log('alles vol');

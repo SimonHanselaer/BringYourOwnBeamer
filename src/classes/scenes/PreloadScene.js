@@ -4,6 +4,10 @@ import './../../assets/images/grondstoffen-03.png';
 import './../../assets/images/grondstoffen-04.png';
 import './../../assets/images/player.png';
 import './../../assets/images/red.png';
+import './../../assets/images/particleRed.png';
+import './../../assets/images/particleYellow.png';
+import './../../assets/images/particleGreen.png';
+import './../../assets/images/particleBlue.png';
 
 import './../../assets/images/containerBlue.png';
 import './../../assets/images/containerGreen.png';
@@ -29,6 +33,10 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image(`grondstof4`, `./assets/images/grondstoffen-04.png`);
     this.load.image(`player`, `./assets/images/player.png`);
     this.load.image(`particle`, `./assets/images/red.png`);
+    this.load.image(`particleRed`, `./assets/images/particleRed.png`);
+    this.load.image(`particleYellow`, `./assets/images/particleYellow.png`);
+    this.load.image(`particleGreen`, `./assets/images/particleGreen.png`);
+    this.load.image(`particleBlue`, `./assets/images/particleBlue.png`);
 
     this.load.image(`containerBlue`, `./assets/images/containerBlue.png`);
     this.load.image(`containerGreen`, `./assets/images/containerGreen.png`);
@@ -51,5 +59,5 @@ export default class PreloadScene extends Phaser.Scene {
   create() {
     this.scene.start(`game`);
   }
-  update() {}
+  update() { }
 }
