@@ -24,6 +24,8 @@ export default class GameScene extends Phaser.Scene {
     this.moveOreBoolean = true;
     this.oreSpeed = 5;
 
+    this.completedContainers = 0;
+
     this.containers = [];
 
     this.containerStaticGroup = this.physics.add.staticGroup();
@@ -132,14 +134,14 @@ export default class GameScene extends Phaser.Scene {
       // this.container.body.checkCollision.right = false;
 
       // console.log(this.container.body);
-      this.containerPosX = this.containerPosX + 498 + 100;
+      this.containerPosX = this.containerPosX + 552 + 116;
       this.teller ++;
       // this.containers.push(this.container);
     });
   }
 
   moveTrain() {
-    console.log('de beweeg boolean verzetten');
+    //console.log('de beweeg boolean verzetten');
     this.moveTrainBoolean = !this.moveTrainBoolean;
   }
 
@@ -244,6 +246,7 @@ export default class GameScene extends Phaser.Scene {
       //this.exitTransition.exit();
     });
   }
+
   //update --------------------------------------------------------------------------------------
 
   update() {
@@ -252,9 +255,8 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.timer.callback.moveTrainBoolean === true) {
-      console.log('train beweegt');
-
-      console.log(this.containerStaticGroup);
+      //console.log('train beweegt');
+      //console.log(this.containerStaticGroup);
       //this.containerStaticGroup.setVelocityX(20);
     }
 
@@ -266,7 +268,7 @@ export default class GameScene extends Phaser.Scene {
     ) {
       this.ore.destroy();
       this.createOre();
-      this.oreSpeed = this.oreSpeed + 0.1;
+      this.oreSpeed = this.oreSpeed + 1.5;
       this.moveOreBoolean = true;
     }
     if (this.ore.down) {
@@ -275,7 +277,8 @@ export default class GameScene extends Phaser.Scene {
           container.count ++;
           this.progress ++;
           this.createProgressBar();
-          console.log('container', container);
+          //console.log('container', container);
+          this.completedContainers ++;
         }
 
         if (container.count === 3) {
@@ -299,11 +302,18 @@ export default class GameScene extends Phaser.Scene {
 
       //console.log(this.containerCount);
 
-      this.oreSpeed = this.oreSpeed + 0.1;
+      this.oreSpeed = this.oreSpeed + 1.5;
       this.moveOreBoolean = true;
     }
     // if (this.ore.body.onFloor()) {
     //   console.log('er is een collide');
     // }
+
+    console.log(this.completedContainers);
+
+    if (this.completedContainers === 12) {
+      //console.log('alles vol');
+      this.scene.start(`end`);
+    }
   }
 }

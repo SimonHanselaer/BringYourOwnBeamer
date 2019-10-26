@@ -1,9 +1,11 @@
 import BootScene from './scenes/BootScene.js';
 import PreloadScene from './scenes/PreloadScene.js';
 import GameScene from './scenes/GameScene.js';
+import EndScene from './scenes/EndScene.js';
+
 import '../leap-0.6.4';
 
-import { TransitionsPlugin } from 'phaser3-transitions';
+import {TransitionsPlugin} from 'phaser3-transitions';
 
 class Game extends Phaser.Game {
   constructor() {
@@ -11,8 +13,8 @@ class Game extends Phaser.Game {
       type: Phaser.AUTO,
       width: 3840,
       height: 1080,
-      title: `Big Bucks Buccaneers`,
-      scene: [BootScene, PreloadScene, GameScene],
+      title: `CarGO`,
+      scene: [BootScene, PreloadScene, GameScene, EndScene],
       plugins: {
         scene: [
           {
@@ -27,7 +29,7 @@ class Game extends Phaser.Game {
       physics: {
         default: `arcade`,
         arcade: {
-          gravity: { y: 0 },
+          gravity: {y: 0},
           debug: true
         }
       }
