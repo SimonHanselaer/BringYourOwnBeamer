@@ -2,7 +2,7 @@ import Ore from '../gameobjects/Ore';
 import Player from '../gameobjects/Player';
 import Container from '../gameobjects/Container';
 
-import {GrowTransition} from 'phaser3-transitions';
+import { GrowTransition } from 'phaser3-transitions';
 
 const map = (value, in_min, in_max, out_min, out_max) => {
   return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
@@ -24,15 +24,18 @@ export default class GameScene extends Phaser.Scene {
     this.moveOreBoolean = true;
     this.oreSpeed = 5;
 
+    this.positionState = 1;
+    this.positionToDo = 'verhogen';
+
     this.containers = [];
 
     this.containerStaticGroup = this.physics.add.staticGroup();
 
     this.containerCount = [
-      {color: 'Yellow', count: 0},
-      {color: 'Blue', count: 0},
-      {color: 'Red', count: 0},
-      {color: 'Green', count: 0}
+      { color: 'Yellow', count: 0 },
+      { color: 'Blue', count: 0 },
+      { color: 'Red', count: 0 },
+      { color: 'Green', count: 0 }
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
@@ -44,7 +47,7 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
-  preload() {}
+  preload() { }
 
   create() {
     this.createBackground();
@@ -71,7 +74,7 @@ export default class GameScene extends Phaser.Scene {
       //console.log('pointer moved');
     });
 
-    const controllerOptions = {enableGestures: true};
+    const controllerOptions = { enableGestures: true };
     Leap.loop(controllerOptions, frame => {
       if (frame.hands.length > 0) {
         const hand = frame.hands[0];
@@ -133,7 +136,7 @@ export default class GameScene extends Phaser.Scene {
 
       // console.log(this.container.body);
       this.containerPosX = this.containerPosX + 498 + 100;
-      this.teller ++;
+      this.teller++;
       // this.containers.push(this.container);
     });
   }
@@ -141,6 +144,7 @@ export default class GameScene extends Phaser.Scene {
   moveTrain() {
     console.log('de beweeg boolean verzetten');
     this.moveTrainBoolean = !this.moveTrainBoolean;
+
   }
 
   //Ores --------------------------------------------------------------------------------------
@@ -255,8 +259,24 @@ export default class GameScene extends Phaser.Scene {
     if (this.timer.callback.moveTrainBoolean === true) {
       console.log('train beweegt');
 
-      console.log(this.containerStaticGroup);
+      //console.log(this.containerStaticGroup.children.entries);
+
+      for (this.teller2 = 0; this.teller2 < this.containerStaticGroup.children.entries.length; this.teller2++) {
+
+        //console.log(this.containerStaticGroup.children.entries[this.teller2]);
+        this.containerStaticGroup.children.entries[this.teller2].x++;
+        this.containerStaticGroup.children.entries[this.teller2].body.x++;
+
+      }
       //this.containerStaticGroup.setVelocityX(20);
+    } else {
+      for (this.teller2 = 0; this.teller2 < this.containerStaticGroup.children.entries.length; this.teller2++) {
+
+        //console.log(this.containerStaticGroup.children.entries[this.teller2]);
+        this.containerStaticGroup.children.entries[this.teller2].x--;
+        this.containerStaticGroup.children.entries[this.teller2].body.x--;
+
+      }
     }
 
     // console.log(this.moveTrainBoolean, this.timer.callback.moveTrainBoolean);
@@ -273,15 +293,15 @@ export default class GameScene extends Phaser.Scene {
     if (this.ore.down) {
       this.containerCount.forEach(container => {
         if (this.ore.color === container.color) {
-          container.count ++;
-          this.progress ++;
+          container.count++;
+          this.progress++;
           this.createProgressBar();
         }
         if (container.count === 3) {
           this.particles = this.add.particles('particle');
           const emitter = this.particles.createEmitter({
             speed: 100,
-            scale: {start: 1, end: 0},
+            scale: { start: 1, end: 0 },
             blendMode: 'ADD'
           });
           emitter.setPosition(
@@ -293,6 +313,8 @@ export default class GameScene extends Phaser.Scene {
           // console.log('Container is vol');
         }
       });
+      this.ore.disableBody();
+      this.containerStaticGroup.add(this.ore);
       this.createOre();
       !this.ore.down;
 
