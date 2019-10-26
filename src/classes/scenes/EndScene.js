@@ -29,7 +29,6 @@ export default class EndScene extends Phaser.Scene {
   }
   preload() {}
   create() {
-    //console.log('in create endscene');
     this.createBackground();
     this.createTrain();
     this.closeTrain();
@@ -53,20 +52,17 @@ export default class EndScene extends Phaser.Scene {
   }
 
   leaveTrain() {
-    //this.leaveTrainBoolean = !this.leaveTrainBoolean;
     this.leaveTrainBoolean = true;
     this.music = this.sound.add('leavingTrain');
     this.music.play();
   }
 
   restartGame() {
-    console.log('herstart game');
     this.scene.start(`begin`);
   }
 
   update() {
     if (this.leaveTrainBoolean === true) {
-      console.log('tuuut tuuut');
       this.train.x += 10;
     }
   }

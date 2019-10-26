@@ -1,6 +1,5 @@
 import Ore from '../gameobjects/Ore';
 import Player from '../gameobjects/Player';
-
 import {GrowTransition} from 'phaser3-transitions';
 
 const map = (value, in_min, in_max, out_min, out_max) => {
@@ -21,7 +20,7 @@ export default class GameScene extends Phaser.Scene {
     this.screenHeight = this.sys.game.config.height;
     this.player;
     this.moveOreBoolean = true;
-    this.oreSpeed = 5;
+    this.oreSpeed = 10;
 
     this.positionState = 1;
     this.positionToDo = 'verhogen';
@@ -86,10 +85,7 @@ export default class GameScene extends Phaser.Scene {
 
   createControls(player) {
     this.input.on('pointermove', pointer => {
-      // console.log(player);
-      // console.log(pointer);
       player.setPosition(pointer.x, this.sys.game.config.height / 2 - 50);
-      //console.log('pointer moved');
     });
 
     const controllerOptions = {enableGestures: true};
@@ -129,63 +125,34 @@ export default class GameScene extends Phaser.Scene {
     this.containerPosX = 475 + 276;
     this.teller = 0;
     this.colors.forEach(color => {
-      // this.container = new Container(
-      //   this,
-      //   this.containerPosX,
-      //   this.sys.game.config.height,
-      //   color,
-      //   this.teller
-
       this.containerStaticGroup
         .create(
           this.containerPosX,
           this.screenHeight / 2 + 170,
-          // this.screenHeight - 346 - 64,
           `container${color}`
         )
         .refreshBody();
 
       this.containerStaticGroup.children.entries[this.teller].color = color;
-      //console.log(this.containerStaticGroup.children.entries[this.teller]);
 
-      // console.log(`container ${color} aangemaakt`);
-      // console.log(this.container.width);
-      // this.container.body.checkCollision.none = true;
-      // this.container.body.checkCollision.up = false;
-      // this.container.body.checkCollision.right = false;
-
-      // console.log(this.container.body);
-      //this.containerPosX = this.containerPosX + 498 + 100;
-      //this.teller++;
       this.containerPosX = this.containerPosX + 552 + 116;
       this.teller ++;
-      // this.containers.push(this.container);
     });
   }
 
   moveTrain() {
-    //console.log('de beweeg boolean verzetten');
     this.moveTrainBoolean = !this.moveTrainBoolean;
   }
 
   //Ores --------------------------------------------------------------------------------------
 
-  // createRandom() {
-  //   this.random = Math.ceil(Math.random() * 4);
-  // }
-
   createOre() {
     this.random = Math.ceil(Math.random() * 4);
-    console.log('0', this.random);
     this.containerCount.forEach(container => {
       if (container.count >= 3 && container.id + 1 === this.random) {
-        // console.log(container.id);
         this.random = Math.ceil(Math.random() * 4);
-        console.log('1', this.random);
         if (container.count >= 3 && container.id + 1 === this.random) {
-          // console.log(container.id);
           this.random = Math.ceil(Math.random() * 4);
-          console.log('2', this.random);
         }
       }
     });
@@ -208,22 +175,16 @@ export default class GameScene extends Phaser.Scene {
       this
     );
 
-    //console.log('ore', this.ore);
-    //console.log(this.physics);
-
     this.containerStaticGroup.children.entries.forEach(container => {
       this.containerCount.forEach(counts => {
         if (
           container.color === this.ore.color &&
           counts.color === this.ore.color
-          //counts.color === this.ore.color &&
-          //counts.count < 3
         ) {
           this.physics.add.collider(this.ore, container, this.handleCollideA);
           if (this.ore.down) {
             this.createOre();
           }
-          // console.log('collider toegevoegd tussen ore en container');
         }
       });
     });
@@ -232,8 +193,7 @@ export default class GameScene extends Phaser.Scene {
   handleCollideA(e) {
     if (!e.down) {
       e.down = true;
-      //
-      // console.log('een keer maar');
+
       return e.down;
     }
   }
@@ -255,7 +215,7 @@ export default class GameScene extends Phaser.Scene {
     this.bar.setOrigin(0);
 
     this.enterConfig = {
-      type: 'Grow', //not case sensitive
+      type: 'Grow',
       enterFrom: 'right'
     };
 
@@ -275,18 +235,12 @@ export default class GameScene extends Phaser.Scene {
       this.config
     );
 
-    //this.enterTransitions = this.transitions.create(this.barArray, this.enterConfig);
     this.exitTransition = this.transitions.create(
       this.barArray,
       this.exitConfig
     );
 
-    // console.log(this.enterTransitions);
-
-    //This will fade all the objects in and then immediately exit
-    this.enterTransitions.enter().then(() => {
-      //this.exitTransition.exit();
-    });
+    this.enterTransitions.enter();
   }
 
   //update --------------------------------------------------------------------------------------
@@ -297,33 +251,24 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.timer.callback.moveTrainBoolean === true) {
-      //console.log('train beweegt');
-
-      //console.log(this.containerStaticGroup.children.entries);
-
       for (
         this.teller2 = 0;
         this.teller2 < this.containerStaticGroup.children.entries.length;
         this.teller2 ++
       ) {
-        //console.log(this.containerStaticGroup.children.entries[this.teller2]);
         this.containerStaticGroup.children.entries[this.teller2].x ++;
         this.containerStaticGroup.children.entries[this.teller2].body.x ++;
       }
-      //this.containerStaticGroup.setVelocityX(20);
     } else {
       for (
         this.teller2 = 0;
         this.teller2 < this.containerStaticGroup.children.entries.length;
         this.teller2 ++
       ) {
-        //console.log(this.containerStaticGroup.children.entries[this.teller2]);
         this.containerStaticGroup.children.entries[this.teller2].x --;
         this.containerStaticGroup.children.entries[this.teller2].body.x --;
       }
     }
-
-    // console.log(this.moveTrainBoolean, this.timer.callback.moveTrainBoolean);
 
     if (
       this.ore.x > this.screenWidth + this.ore.width / 20 ||
@@ -331,7 +276,7 @@ export default class GameScene extends Phaser.Scene {
     ) {
       this.ore.destroy();
       this.createOre();
-      this.oreSpeed = this.oreSpeed + 1.3;
+      this.oreSpeed = this.oreSpeed + 0.7;
       this.moveOreBoolean = true;
     }
     if (this.ore.down) {
@@ -342,7 +287,7 @@ export default class GameScene extends Phaser.Scene {
             this.progress ++;
           }
           this.createProgressBar();
-          //console.log('container', container);
+
           this.completedContainers ++;
 
           this.musicMatch = this.sound.add('match', {volume: 0.5});
@@ -350,14 +295,17 @@ export default class GameScene extends Phaser.Scene {
         }
 
         if (container.count === 3 && !container.particlesBoolean) {
-          console.log('particle added');
           container.particlesBoolean = true;
           this.particles = this.add.particles(`particle${container.color}`);
           const emitter = this.particles.createEmitter({
             speed: 100,
             scale: {start: 0.4, end: 0},
+<<<<<<< HEAD
             // blendMode: 'ADD',
             maxParticles: 75,
+=======
+            maxParticles: 200,
+>>>>>>> 27d8a2575a7599cfe8a16afaead9ce039c8e7cd5
             accelerationY: - 500,
             frequency: 75,
             lifespan: 800
@@ -367,9 +315,13 @@ export default class GameScene extends Phaser.Scene {
             this.containerStaticGroup.children.entries[container.id].y - 100
           );
           emitter.setSpeed(200);
+<<<<<<< HEAD
           emitter.setAlpha(0.8);
           //emitter.setBlendMode(Phaser.BlendModes.ADD);
           // console.log('Container is vol');
+=======
+          emitter.setAlpha(0.5);
+>>>>>>> 27d8a2575a7599cfe8a16afaead9ce039c8e7cd5
           this.musicFull = this.sound.add('full', {volume: 0.5});
           this.musicFull.play();
         }
@@ -379,16 +331,9 @@ export default class GameScene extends Phaser.Scene {
       this.createOre();
       !this.ore.down;
 
-      //console.log(this.containerCount);
-
-      this.oreSpeed = this.oreSpeed + 1.5;
+      this.oreSpeed = this.oreSpeed + 0.7;
       this.moveOreBoolean = true;
     }
-    // if (this.ore.body.onFloor()) {
-    //   console.log('er is een collide');
-    // }
-
-    //console.log(this.completedContainers);
 
     if (
       this.containerCount[0].count >= 3 &&
@@ -400,13 +345,11 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.lastPos > this.player.x) {
-      console.log('bewogen naar links');
       this.lastPos = this.player.x;
       this.player.setRotation(- 0.5);
     }
 
     if (this.lastPos < this.player.x) {
-      console.log('bewogen naar rechts');
       this.lastPos = this.player.x;
       this.player.setRotation(0.5);
     }
