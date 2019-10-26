@@ -318,7 +318,9 @@ export default class GameScene extends Phaser.Scene {
       this.containerCount.forEach(container => {
         if (this.ore.color === container.color) {
           container.count++;
-          this.progress++;
+          if (container.count < 3) {
+            this.progress++;
+          }
           this.createProgressBar();
           //console.log('container', container);
           this.completedContainers++;
@@ -367,7 +369,7 @@ export default class GameScene extends Phaser.Scene {
 
     //console.log(this.completedContainers);
 
-    if (this.containerCount[0].count == 3 && this.containerCount[1].count == 3 && this.containerCount[2].count == 3 && this.containerCount[3].count == 3) {
+    if (this.containerCount[0].count >= 3 && this.containerCount[1].count >= 3 && this.containerCount[2].count >= 3 && this.containerCount[3].count >= 3) {
       this.scene.start(`end`);
     }
 
