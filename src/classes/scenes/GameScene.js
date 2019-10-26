@@ -191,8 +191,9 @@ export default class GameScene extends Phaser.Scene {
       this.containerCount.forEach(counts => {
         if (
           container.color === this.ore.color &&
-          counts.color === this.ore.color &&
-          counts.count < 3
+          counts.color === this.ore.color
+          //counts.color === this.ore.color &&
+          //counts.count < 3
         ) {
           this.physics.add.collider(this.ore, container, this.handleCollideA);
           if (this.ore.down) {
