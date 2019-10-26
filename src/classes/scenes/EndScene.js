@@ -5,9 +5,11 @@ export default class EndScene extends Phaser.Scene {
     });
   }
 
-  init() {
+  init(data) {
     this.screenWidth = this.sys.game.config.width;
     this.screenHeight = this.sys.game.config.height;
+
+    this.trainPosX = data;
 
     this.leaveTrainBoolean = false;
 
@@ -25,7 +27,7 @@ export default class EndScene extends Phaser.Scene {
       loop: false
     });
   }
-  preload() {}
+  preload() { }
   create() {
     //console.log('in create endscene');
     this.createBackground();
@@ -39,14 +41,14 @@ export default class EndScene extends Phaser.Scene {
 
   createTrain() {
     this.train = this.add.image(
-      this.screenWidth / 2,
+      this.trainPosX,
       this.screenHeight / 2,
       'trainFull'
     );
   }
 
   closeTrain() {
-    this.musicClose = this.sound.add('close', {volume: 0.7});
+    this.musicClose = this.sound.add('close', { volume: 0.7 });
     this.musicClose.play();
   }
 
