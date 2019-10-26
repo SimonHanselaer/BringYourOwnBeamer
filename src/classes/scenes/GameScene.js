@@ -314,6 +314,9 @@ export default class GameScene extends Phaser.Scene {
           this.createProgressBar();
           //console.log('container', container);
           this.completedContainers ++;
+
+          this.musicMatch = this.sound.add('match', {volume: 0.5});
+          this.musicMatch.play();
         }
 
         if (container.count === 3 && !container.particlesBoolean) {
@@ -336,6 +339,8 @@ export default class GameScene extends Phaser.Scene {
           emitter.setAlpha(0.5);
           //emitter.setBlendMode(Phaser.BlendModes.ADD);
           // console.log('Container is vol');
+          this.musicFull = this.sound.add('full', {volume: 0.5});
+          this.musicFull.play();
         }
       });
       this.ore.disableBody();

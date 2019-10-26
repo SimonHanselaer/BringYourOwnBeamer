@@ -12,14 +12,14 @@ export default class EndScene extends Phaser.Scene {
     this.leaveTrainBoolean = false;
 
     this.timer = this.time.addEvent({
-      delay: 4000,
+      delay: 2000,
       callback: this.leaveTrain,
       callbackScope: this,
       loop: false
     });
 
     this.timerRestart = this.time.addEvent({
-      delay: 12000,
+      delay: 10000,
       callback: this.restartGame,
       callbackScope: this,
       loop: false
@@ -30,6 +30,7 @@ export default class EndScene extends Phaser.Scene {
     //console.log('in create endscene');
     this.createBackground();
     this.createTrain();
+    this.closeTrain();
   }
 
   createBackground() {
@@ -42,6 +43,11 @@ export default class EndScene extends Phaser.Scene {
       this.screenHeight / 2,
       'trainFull'
     );
+  }
+
+  closeTrain() {
+    this.musicClose = this.sound.add('close', {volume: 0.7});
+    this.musicClose.play();
   }
 
   leaveTrain() {
