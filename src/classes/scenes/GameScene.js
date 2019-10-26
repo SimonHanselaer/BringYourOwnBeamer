@@ -1,8 +1,7 @@
 import Ore from '../gameobjects/Ore';
 import Player from '../gameobjects/Player';
-import Container from '../gameobjects/Container';
 
-import { GrowTransition } from 'phaser3-transitions';
+import {GrowTransition} from 'phaser3-transitions';
 
 const map = (value, in_min, in_max, out_min, out_max) => {
   return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
@@ -34,10 +33,10 @@ export default class GameScene extends Phaser.Scene {
     this.containerStaticGroup = this.physics.add.staticGroup();
 
     this.containerCount = [
-      { id: 0, color: 'Yellow', count: 0, particlesBoolean: false },
-      { id: 1, color: 'Blue', count: 0, particlesBoolean: false },
-      { id: 2, color: 'Red', count: 0, particlesBoolean: false },
-      { id: 3, color: 'Green', count: 0, particlesBoolean: false }
+      {id: 0, color: 'Yellow', count: 0, particlesBoolean: false},
+      {id: 1, color: 'Blue', count: 0, particlesBoolean: false},
+      {id: 2, color: 'Red', count: 0, particlesBoolean: false},
+      {id: 3, color: 'Green', count: 0, particlesBoolean: false}
     ];
 
     this.colors = ['Yellow', 'Blue', 'Red', 'Green'];
@@ -49,7 +48,7 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
-  preload() { }
+  preload() {}
 
   create() {
     this.createBackground();
@@ -87,7 +86,7 @@ export default class GameScene extends Phaser.Scene {
       //console.log('pointer moved');
     });
 
-    const controllerOptions = { enableGestures: true };
+    const controllerOptions = {enableGestures: true};
     Leap.loop(controllerOptions, frame => {
       if (frame.hands.length > 0) {
         const hand = frame.hands[0];
@@ -114,7 +113,8 @@ export default class GameScene extends Phaser.Scene {
       this.sys.game.config.width / 2,
       this.sys.game.config.height / 2 - 50
     );
-    this.player.setScale(0.1, 0.1);
+
+    this.lastPos = this.player.x;
   }
 
   //Container --------------------------------------------------------------------------------------
@@ -152,7 +152,7 @@ export default class GameScene extends Phaser.Scene {
       //this.containerPosX = this.containerPosX + 498 + 100;
       //this.teller++;
       this.containerPosX = this.containerPosX + 552 + 116;
-      this.teller++;
+      this.teller ++;
       // this.containers.push(this.container);
     });
   }
@@ -284,22 +284,22 @@ export default class GameScene extends Phaser.Scene {
       for (
         this.teller2 = 0;
         this.teller2 < this.containerStaticGroup.children.entries.length;
-        this.teller2++
+        this.teller2 ++
       ) {
         //console.log(this.containerStaticGroup.children.entries[this.teller2]);
-        this.containerStaticGroup.children.entries[this.teller2].x++;
-        this.containerStaticGroup.children.entries[this.teller2].body.x++;
+        this.containerStaticGroup.children.entries[this.teller2].x ++;
+        this.containerStaticGroup.children.entries[this.teller2].body.x ++;
       }
       //this.containerStaticGroup.setVelocityX(20);
     } else {
       for (
         this.teller2 = 0;
         this.teller2 < this.containerStaticGroup.children.entries.length;
-        this.teller2++
+        this.teller2 ++
       ) {
         //console.log(this.containerStaticGroup.children.entries[this.teller2]);
-        this.containerStaticGroup.children.entries[this.teller2].x--;
-        this.containerStaticGroup.children.entries[this.teller2].body.x--;
+        this.containerStaticGroup.children.entries[this.teller2].x --;
+        this.containerStaticGroup.children.entries[this.teller2].body.x --;
       }
     }
 
@@ -317,15 +317,15 @@ export default class GameScene extends Phaser.Scene {
     if (this.ore.down) {
       this.containerCount.forEach(container => {
         if (this.ore.color === container.color) {
-          container.count++;
+          container.count ++;
           if (container.count < 4) {
-            this.progress++;
+            this.progress ++;
           }
           this.createProgressBar();
           //console.log('container', container);
-          this.completedContainers++;
+          this.completedContainers ++;
 
-          this.musicMatch = this.sound.add('match', { volume: 0.5 });
+          this.musicMatch = this.sound.add('match', {volume: 0.5});
           this.musicMatch.play();
         }
 
@@ -335,7 +335,7 @@ export default class GameScene extends Phaser.Scene {
           this.particles = this.add.particles(`particle${container.color}`);
           const emitter = this.particles.createEmitter({
             speed: 100,
-            scale: { start: 0.4, end: 0 },
+            scale: {start: 0.4, end: 0},
             // blendMode: 'ADD',
             maxParticles: 75,
             accelerationY: - 500,
@@ -350,7 +350,7 @@ export default class GameScene extends Phaser.Scene {
           emitter.setAlpha(0.8);
           //emitter.setBlendMode(Phaser.BlendModes.ADD);
           // console.log('Container is vol');
-          this.musicFull = this.sound.add('full', { volume: 0.5 });
+          this.musicFull = this.sound.add('full', {volume: 0.5});
           this.musicFull.play();
         }
       });
@@ -370,15 +370,25 @@ export default class GameScene extends Phaser.Scene {
 
     //console.log(this.completedContainers);
 
-    if (this.containerCount[0].count >= 3 && this.containerCount[1].count >= 3 && this.containerCount[2].count >= 3 && this.containerCount[3].count >= 3) {
-
+    if (
+      this.containerCount[0].count >= 3 &&
+      this.containerCount[1].count >= 3 &&
+      this.containerCount[2].count >= 3 &&
+      this.containerCount[3].count >= 3
+    ) {
       this.scene.start(`end`, this.train.x);
     }
 
+    if (this.lastPos > this.player.x) {
+      console.log('bewogen naar links');
+      this.lastPos = this.player.x;
+      this.player.setRotation(- 0.5);
+    }
 
-    // if (this.completedContainers === 12) {
-    //   //console.log('alles vol');
-    //   this.scene.start(`end`);
-    // }
+    if (this.lastPos < this.player.x) {
+      console.log('bewogen naar rechts');
+      this.lastPos = this.player.x;
+      this.player.setRotation(0.5);
+    }
   }
 }
