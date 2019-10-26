@@ -363,9 +363,14 @@ export default class GameScene extends Phaser.Scene {
 
     //console.log(this.completedContainers);
 
-    if (this.completedContainers === 12) {
-      //console.log('alles vol');
+    if (this.containerCount[0].count === 3 && this.containerCount[1].count === 3 && this.containerCount[2].count === 3 && this.containerCount[3].count === 3) {
       this.scene.start(`end`);
     }
+
+
+    // if (this.completedContainers === 12) {
+    //   //console.log('alles vol');
+    //   this.scene.start(`end`);
+    // }
   }
 }
